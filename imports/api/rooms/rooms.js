@@ -7,37 +7,57 @@ Meteor.methods({
     console.log("Making a room!");
 
     RoomsCollection.insert({
-      game_state: "waiting",
+      gameState: "waiting",
       code: "BALLS",
       createdAt: new Date(),
       players: [
         {name: "Dean"},
         {name: "Jennifer"}
       ],
-      num_tricks_arr: [1, 2, 3, 4, 5],
-      curr_round: null,
+      numTricksArr: [1, 2, 3, 4, 5],
+      currRound: null,
       rounds: [],
     });
   },
-  'rooms.rounds.start'(roomId) {
-    // todo: start a round
-    curr_round = {
-      state: "bid",
-      active_player: null,
-      bids: [],
-      num_tricks: 69,
-      tricks: [],
-      player_ids_to_cards: {},
-      curr_trick: []
-    }
+
+  'rooms.rounds.start'(roomID) {
+    // todo: what if the roomID doesn't exist?
+    // todo: move currRound to the rounds array
+    RoomsCollection.update(roomID, {
+      $set: {
+        currRound: {
+          state: "bid",
+          activePlayer: null,
+          bids: [],
+          numTricks: 69,
+          playerIDsToCards: {},
+          trumpCard: null,
+          currTrick: [],
+          tricks: []
+        }
+      }
+    });
+    // todo: call rooms.rounds.deal
   },
-  'rooms.tricks.start'(roomId) {
-    // todo: start a trick
-    curr_trick = {
-      lead_player_id: "",
-      winning_player_id: "",
-      cards_played: {},
-      lead_suit: ""
+  'rooms.rounds.deal'(roomID) {
+    // todo: set trumpCard (can't be a wizard)
+    // todo: set playerIDsToCards
+  },
+  'rooms.rounds.playerIDsToTricksWon'(round) {
+    // todo: helper function to determine which tricks were won by which players
+  },
+  'rooms.rounds.playerIDsToScores'(round) {
+    // todo: helper function to determine the scores of each round
+  },
+
+  'rooms.tricks.start'(roomID) {
+    // todo: move currTrick to the tricks array
+    // todo: set currTrick
+    currTrick = {
+      leadPlayerID: "",
+      winningPlayerID: "",
+      cardsPlayed: {},
+      leadSuit: ""
     }
   }
 })
