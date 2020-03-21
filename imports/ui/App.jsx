@@ -4,7 +4,23 @@ import WaitingRoomScreen from "./host/WaitingRoomScreen";
 import BidScreen from "./host/BidScreen";
 
 export default class App extends React.Component {
-	// TODO add logic for which screen to render
+	renderScreen() {
+		// TODO add logic for which screen to render
+		return (
+			<div>
+				<WelcomeScreen />
+				<WaitingRoomScreen
+					code="BALLS"
+					players={[
+						{ _id: 1, name: "Jen" },
+						{ _id: 2, name: "Dean" },
+						{ _id: 3, name: "Max" }
+					]}
+				/>
+			</div>
+		);
+	}
+
 	render() {
 		return (
 			<div>
@@ -18,10 +34,13 @@ export default class App extends React.Component {
 					width="200px"
 				/>
 				<br />
-				<WelcomeScreen />
-				<WaitingRoomScreen
-					code="BALLS"
-					players={[{ _id: 1, name: "Jen" }, { _id: 2, name: "Dean" }]}
+				<BidScreen
+					playerIdToBids={{ 1: 2, 2: null, 3: null }}
+					players={[
+						{ _id: 1, name: "Jen" },
+						{ _id: 2, name: "Dean" },
+						{ _id: 3, name: "Max" }
+					]}
 				/>
 			</div>
 		);
