@@ -3,18 +3,12 @@ import PropTypes from "prop-types";
 
 export default class WaitingRoomScreen extends React.Component {
 	renderPlayer(player) {
-		return <ul>{player.name}</ul>;
-	}
-
-	createRoom() {
-		Meteor.call("rooms.create");
+		return <ul key={player._id}>{player.name}</ul>;
 	}
 
 	render() {
 		return (
 			<div>
-				<button onClick={this.createRoom.bind(this)}>make a room</button>
-				<br />
 				<strong>Number of rooms:</strong> {this.props.numRooms}
 				<h1> Game code</h1>
 				{this.props.code}
