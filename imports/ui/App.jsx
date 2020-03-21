@@ -13,6 +13,11 @@ export const App = () => {
     })
   }
 
+  // TODO: Read https://reactjs.org/docs/hooks-state.html
+
+  // TODO: As a proof-of-concept, figure out how to display
+  // the code of the last room
+
   return (
     <div>
       <h1>Welcome to Meteor!</h1>
