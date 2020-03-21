@@ -1,6 +1,6 @@
 import React from "react";
 import { WelcomeScreen } from "./host/WelcomeScreen";
-import WaitingRoomScreenContainer from "./host/WaitingRoomScreenContainer";
+import WaitingRoomScreen from "./host/WaitingRoomScreen";
 import BidScreen from "./host/BidScreen";
 
 import { RoomsCollection } from "/imports/api/rooms/rooms";
@@ -24,12 +24,21 @@ export default class App extends React.Component {
 		return (
 			<div>
 				<h1>w i z a r d s</h1>
-        <img src="https://previews.123rf.com/images/chudtsankov/chudtsankov1303/chudtsankov130300165/18573211-happy-wizard-with-open-arms.jpg" width="200px"/>
-        <img src="https://previews.123rf.com/images/chudtsankov/chudtsankov1303/chudtsankov130300165/18573211-happy-wizard-with-open-arms.jpg" width="200px"/>
-        <br />
+				<img
+					src="https://previews.123rf.com/images/chudtsankov/chudtsankov1303/chudtsankov130300165/18573211-happy-wizard-with-open-arms.jpg"
+					width="200px"
+				/>
+				<img
+					src="https://previews.123rf.com/images/chudtsankov/chudtsankov1303/chudtsankov130300165/18573211-happy-wizard-with-open-arms.jpg"
+					width="200px"
+				/>
+				<br />
 				<button onClick={createRoom}>make a room</button>
 
-				<WaitingRoomScreenContainer />
+				<WaitingRoomScreen
+					code="BALLS"
+					players={[{ name: "Jen" }, { name: "Dean" }]}
+				/>
 			</div>
 		);
 	}
