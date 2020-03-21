@@ -17,7 +17,6 @@ export default class App extends React.Component {
 					width="200px"
 				/>
 				<br />
-				<button onClick={createRoom}>make a room</button>
 
 				<WaitingRoomScreen
 					code="BALLS"
