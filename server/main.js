@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { LinksCollection } from '/imports/api/links';
+import { RoomsCollection } from '/imports/api/rooms/rooms';
 
 function insertLink({ title, url }) {
   LinksCollection.insert({title, url, createdAt: new Date()});
@@ -7,6 +8,7 @@ function insertLink({ title, url }) {
 
 Meteor.startup(() => {
   // If the Links collection is empty, add some data.
+  console.log("Booting up");
   if (LinksCollection.find().count() === 0) {
     insertLink({
       title: 'Do the Tutorial',
