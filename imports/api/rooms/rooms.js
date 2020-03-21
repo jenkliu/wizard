@@ -62,7 +62,12 @@ Meteor.methods({
     // todo: call rooms.rounds.deal
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
-
+    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+    currRound = room.currRound;
+    currRound.playerIDsToBids[playerID] = bid;
+    RoomsCollection.update(roomID, {
+      $set: {currRound: currRound}
+    });
   },
   'rooms.rounds.deal'(roomID) {
     // todo: set trumpCard (can't be a wizard)
