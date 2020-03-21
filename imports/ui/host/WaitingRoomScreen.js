@@ -6,12 +6,16 @@ export default class WaitingRoomScreen extends React.Component {
 		return <ul>{player.name}</ul>;
 	}
 
+	createRoom() {
+		Meteor.call("rooms.create");
+	}
+
 	render() {
 		return (
 			<div>
-				<h1>Number of rooms</h1>
-				{this.props.numRooms}
-
+				<button onClick={this.createRoom.bind(this)}>make a room</button>
+				<br />
+				<strong>Number of rooms:</strong> {this.props.numRooms}
 				<h1> Game code</h1>
 				{this.props.code}
 				<h1>Players in this game:</h1>
