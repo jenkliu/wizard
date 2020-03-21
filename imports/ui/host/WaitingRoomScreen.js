@@ -2,11 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export default class WaitingRoomScreen extends React.Component {
+  createRoom() {
+    Meteor.call('rooms.create')
+  }
+
   render() {
     return (
       <div>
-        <h1>Number of rooms</h1>
-        {this.props.numRooms}
+        <button onClick={this.createRoom.bind(this)}>make a room</button>
+        <br />
+        <strong>Number of rooms:</strong> {this.props.numRooms}
         <h1>Players in this game:</h1>
         <ul>
           <li> Dean!! ??!!? </li>
