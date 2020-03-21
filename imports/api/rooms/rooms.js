@@ -4,45 +4,65 @@ export const RoomsCollection = new Mongo.Collection("rooms");
 
 Meteor.methods({
 	"rooms.create"() {
-		console.log("Making a room!");
-
-    RoomsCollection.insert({
+    room = RoomsCollection.insert({
       gameState: "waiting",
       code: "BALLS",
       createdAt: new Date(),
       players: [
-        {name: "Dean"},
-        {name: "Jennifer"}
+        {
+          _id: 1,
+          name: "Dean"
+        },
+        {
+          _id: 2,
+          name: "Jennifer"
+        },
+        {
+          _id: 3,
+          name: "Bruno"
+        }
       ],
       numTricksArr: [1, 2, 3, 4, 5],
       currRound: null,
       rounds: [],
     });
+    console.log("Made a room with ID: " + room);
   },
 
   'rooms.rounds.start'(roomID) {
-    // todo: if currRound is not null, move currRound to the rounds array
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
+
+    // update historical rounds array
     rounds = room.rounds;
     if(room.currRound) {
       rounds.push(room.currRound);
-    }
+    };
+
+    playerIDsToBids = room.players.reduce(function(map, obj) {
+      map[obj._id] = null;
+      return map;
+    }, {});
+
+    // initialize round
     RoomsCollection.update(roomID, {
       $set: {
         rounds: rounds,
         currRound: {
           state: "bid",
           activePlayer: null,
-          bids: [],
+          playerIDsToBids: playerIDsToBids,
           numTricks: 69,
           playerIDsToCards: {},
           trumpCard: null,
-          currTrick: [],
+          currTrick: null,
           tricks: []
         }
       }
     });
     // todo: call rooms.rounds.deal
+  },
+  'rooms.rounds.updateBid'(roomID, playerID, bid) {
+
   },
   'rooms.rounds.deal'(roomID) {
     // todo: set trumpCard (can't be a wizard)
