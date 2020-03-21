@@ -21,10 +21,15 @@ Meteor.methods({
   },
 
   'rooms.rounds.start'(roomID) {
-    // todo: what if the roomID doesn't exist?
-    // todo: move currRound to the rounds array
+    // todo: if currRound is not null, move currRound to the rounds array
+    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+    rounds = room.rounds;
+    if(room.currRound) {
+      rounds.push(room.currRound);
+    }
     RoomsCollection.update(roomID, {
       $set: {
+        rounds: rounds,
         currRound: {
           state: "bid",
           activePlayer: null,
