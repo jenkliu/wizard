@@ -1,10 +1,10 @@
-import { Mongo } from 'meteor/mongo';
+import { Mongo } from "meteor/mongo";
 
-export const RoomsCollection = new Mongo.Collection('rooms');
+export const RoomsCollection = new Mongo.Collection("rooms");
 
 Meteor.methods({
-  'rooms.create'() {
-    console.log("Making a room!");
+	"rooms.create"() {
+		console.log("Making a room!");
 
     RoomsCollection.insert({
       gameState: "waiting",
