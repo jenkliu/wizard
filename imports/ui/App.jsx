@@ -35,7 +35,7 @@ export default class App extends React.Component {
 				/>
 				<br />
 				<BidScreen
-					playerIdToBids={{ 1: 2, 2: null, 3: null }}
+					playerIdToBids={{ 1: 2, 2: 0, 3: undefined }}
 					players={[
 						{ _id: 1, name: "Jen" },
 						{ _id: 2, name: "Dean" },
