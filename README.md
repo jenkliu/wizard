@@ -1,4 +1,4 @@
-# wizard
+# w i z a r d s
 
 GRAB THE MOST RECENT ROOM
 db.rooms.find().sort({createdAt: -1})[0]
