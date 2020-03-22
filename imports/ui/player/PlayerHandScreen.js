@@ -8,9 +8,14 @@ export default class PlayerHandScreen extends React.Component {
 		const cardsWithIds = props.cards.map((card, i) => {
 			return { id: i, ...card };
 		});
+		const cardIdsToCards = {};
+		props.cards.forEach((card, i) => {
+			cardIdsToCards[i] = card;
+		});
 		this.state = {
 			bid: 0,
 			activeCardId: null,
+			cardIdsToCards,
 			cardsWithIds
 		};
 	}
@@ -39,6 +44,11 @@ export default class PlayerHandScreen extends React.Component {
 
 	handleClickCard = id => {
 		this.setState({ activeCardId: id });
+	};
+
+	handleClickPlayCard = () => {
+		const card = this.state.cardIdsToCards[this.state.activeCardId];
+		this.props.playCard(this.props.myPlayer._id, card);
 	};
 
 	// TODO make these fan out/scrollable in a carousel
@@ -79,7 +89,11 @@ export default class PlayerHandScreen extends React.Component {
 		if (this.props.currRoundState === 'bid') {
 			return this.renderBidInput();
 		} else {
-			return <button className="btn">PLAY</button>;
+			return (
+				<button className="btn" onClick={this.handleClickPlayCard}>
+					PLAY CARD
+				</button>
+			);
 		}
 	}
 
@@ -100,5 +114,6 @@ PlayerHandScreen.propTypes = {
 	cards: PropTypes.array,
 	activePlayer: PropTypes.object,
 	currRoundState: PropTypes.string, // 'bid' | 'play'
-	submitBid: PropTypes.func
+	submitBid: PropTypes.func,
+	playCard: PropTypes.func
 };
