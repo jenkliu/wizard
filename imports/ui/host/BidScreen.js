@@ -8,7 +8,7 @@ export default class BidScreen extends React.Component {
         <div className="player-name">{player.name}</div>
 
         <div className="bid">
-          {this.props.playerIdToBids[player._id] !== undefined
+          {this.props.playerIdToBids[player._id] != null
             ? this.props.playerIdToBids[player._id]
             : "?"}
         </div>

@@ -9,7 +9,8 @@ const WaitingRoomScreenContainer = withTracker(({ id }) => {
 	const room = RoomsCollection.findOne({ _id: id });
 	return {
 		code: room.code,
-		players: room.players
+		players: room.players,
+		roomId: room._id
 	};
 })(WaitingRoomScreen);
 

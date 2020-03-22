@@ -5,23 +5,34 @@ import { withTracker } from "meteor/react-meteor-data";
 // these will all get converted to containers
 import WelcomeScreen from "./host/WelcomeScreen";
 import WaitingRoomScreen from "./host/WaitingRoomScreen";
-import WaitingRoomScreenContainer from "./host/WaitingRoomScreenContainer";
 
 import BidScreen from "./host/BidScreen";
 import GameplayScreen from "./host/GameplayScreen";
 
 class App extends React.Component {
-	renderGameRoundScreen() {
-		switch (this.props.room.currRound) {
+	startGame = () => {
+		Meteor.call("rooms.start", this.props.room._id);
+		Meteor.call("rooms.rounds.start", this.props.room._id);
+	};
+
+	renderActiveGameScreen() {
+		switch (this.props.room.currRound.state) {
 			case "bid":
+				// Dummy code
+				// return (
+				// 	<BidScreen
+				// 		playerIdToBids={{ 1: 2, 2: 0, 3: null }}
+				// 		players={[
+				// 			{ _id: 1, name: "Jen" },
+				// 			{ _id: 2, name: "Dean" },
+				// 			{ _id: 3, name: "Max" }
+				// 		]}
+				// 	/>
+				// );
 				return (
 					<BidScreen
-						playerIdToBids={{ 1: 2, 2: 0, 3: null }}
-						players={[
-							{ _id: 1, name: "Jen" },
-							{ _id: 2, name: "Dean" },
-							{ _id: 3, name: "Max" }
-						]}
+						playerIdToBids={this.props.room.currRound.playerIDsToBids}
+						players={this.props.room.players}
 					/>
 				);
 				break;
@@ -53,17 +64,13 @@ class App extends React.Component {
 	renderRoomScreen() {
 		switch (this.props.room.gameState) {
 			case "waiting":
-				// return (
-				// 	<WaitingRoomScreen
-				// 		code="BALLS"
-				// 		players={[
-				// 			{ _id: 1, name: "Jen" },
-				// 			{ _id: 2, name: "Dean" },
-				// 			{ _id: 3, name: "Max" }
-				// 		]}
-				// 	/>
-				// );
-				return <WaitingRoomScreenContainer id={this.props.room._id} />;
+				return (
+					<WaitingRoomScreen
+						code={this.props.room.code}
+						players={this.props.room.players}
+						startGame={this.startGame}
+					/>
+				);
 				break;
 			case "active":
 				return this.renderActiveGameScreen();
@@ -83,9 +90,9 @@ class App extends React.Component {
 
 export default withTracker(() => {
 	Meteor.subscribe("rooms");
-	console.log(RoomsCollection.find().fetch());
+	const rooms = RoomsCollection.find().fetch();
 	return {
-		// TODO: properly fetch
-		room: RoomsCollection.find().fetch()[7]
+		// TODO: properly fetch the correct room
+		room: rooms[rooms.length - 1]
 	};
 })(App);
