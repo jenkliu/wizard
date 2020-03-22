@@ -330,11 +330,36 @@ Meteor.methods({
     });
   },
   'rooms.rounds.finish'(roomID) {
-    // todo: push currRound.currTrick onto currRound.tricks
-    // todo: currRound.state = 'finished'
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound
+
+    // Clean up the last trick
+    if (currRound.currTrick) {
+      currRound.activePlayerID = currRound.currTrick.winningPlayerID;
+      currRound.tricks.push(currRound.currTrick);
+      currRound.currTrick = null;
+    }
+    currRound.activePlayerID = null;
+    currRound.state = 'finished';
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.finish'(roomID) {
-    // todo: push currRound onto rounds
-    // todo: room.gameState = 'finished'
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+    // Clean up the last round
+    rounds = room.rounds;
+    if (room.currRound) {
+      rounds.push(room.currRound);
+    }
+
+    RoomsCollection.update(roomID, {
+      $set: {
+        rounds: rounds,
+        currRound: null,
+        state: 'finished'
+      }
+    });
   }
 });
