@@ -59,7 +59,10 @@ Meteor.methods({
         }
       }
     });
-    // todo: call rooms.rounds.deal
+  },
+  'rooms.rounds.deal'(roomID) {
+    // todo: set trumpCard (can't be a wizard)
+    // todo: set playerIDsToCards
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
@@ -68,10 +71,6 @@ Meteor.methods({
     RoomsCollection.update(roomID, {
       $set: {currRound: currRound}
     });
-  },
-  'rooms.rounds.deal'(roomID) {
-    // todo: set trumpCard (can't be a wizard)
-    // todo: set playerIDsToCards
   },
   'rooms.rounds.playerIDsToTricksWon'(round) {
     // todo: helper function to determine which tricks were won by which players
