@@ -71,9 +71,9 @@ Meteor.methods({
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
 
     deck = []
-    suits = ["Spades", "Hearts", "Clubs", "Diamonds"];
+    suits = ["S", "H", "C", "D"];
     suits.forEach(function(suit){
-      for (value = 1; value <= 13; value++) {
+      for (value = 2; value <= 14; value++) {
         deck.push({
           suit: suit,
           value: value,
