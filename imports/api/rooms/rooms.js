@@ -179,7 +179,26 @@ Meteor.methods({
     });
   },
   'rooms.tricks.playCard'(roomID, playerID, card) {
-    // todo:
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound
+
+    if (playerID != room.currRound.activePlayerID) {
+      throw new Meteor.Error('action taken by non-active player');
+    }
+    // todo: throw error if the player doesn't actually have that card
+    // todo: check if the card is legal
+
+    currRound.currTrick.playerIDsToCards[playerID] = card;
+    currRound.activePlayerID = getNextPlayerID(room.players, playerID);
+
+    playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
+      return !((handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type))
+    });
+    currRound.playerIDsToCards[playerID] = playerCards;
+  
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.tricks.finish'(roomID) {
     // todo: set the winning player ID
