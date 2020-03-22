@@ -5,6 +5,11 @@ export const RoomsCollection = new Mongo.Collection('rooms');
 
 var shuffle = require('shuffle-array');
 
+function getNextPlayerID(players, currentPlayerID) {
+  playerIDs = players.map(function(player){ return player._id });
+  return playerIDs[(playerIDs.indexOf(currentPlayerID) + 1) % playerIDs.length];
+}
+
 Meteor.methods({
   'rooms.create'() {
     room = RoomsCollection.insert({
@@ -123,13 +128,14 @@ Meteor.methods({
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+    if (playerID != room.currRound.activePlayerID) { return; }
+
     currRound = room.currRound;
     currRound.playerIDsToBids[playerID] = bid;
+    currRound.activePlayerID = getNextPlayerID(room.players, playerID);
     RoomsCollection.update(roomID, {
-      $set: {
-        currRound: currRound
-        // todo: update activePlayer to the next one
-      }
+      $set: { currRound: currRound }
     });
   },
   'rooms.rounds.beginPlay'(roomID) {
