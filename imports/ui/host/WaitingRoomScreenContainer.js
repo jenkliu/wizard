@@ -4,13 +4,12 @@ import { withTracker } from "meteor/react-meteor-data";
 
 import WaitingRoomScreen from "./WaitingRoomScreen";
 
-const WaitingRoomScreenContainer = withTracker(() => {
+const WaitingRoomScreenContainer = withTracker(({ id }) => {
 	Meteor.subscribe("rooms");
-	// TODO fetch specific ID
-	const rooms = RoomsCollection.find().fetch();
+	const room = RoomsCollection.findOne({ _id: id });
 	return {
-		// TODO make this less hacky
-		code: rooms.length > 0 ? rooms[0].code : null
+		code: room.code,
+		players: room.players
 	};
 })(WaitingRoomScreen);
 

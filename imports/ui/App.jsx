@@ -5,6 +5,8 @@ import { withTracker } from "meteor/react-meteor-data";
 // these will all get converted to containers
 import WelcomeScreen from "./host/WelcomeScreen";
 import WaitingRoomScreen from "./host/WaitingRoomScreen";
+import WaitingRoomScreenContainer from "./host/WaitingRoomScreenContainer";
+
 import BidScreen from "./host/BidScreen";
 import GameplayScreen from "./host/GameplayScreen";
 
@@ -51,16 +53,17 @@ class App extends React.Component {
 	renderRoomScreen() {
 		switch (this.props.room.gameState) {
 			case "waiting":
-				return (
-					<WaitingRoomScreen
-						code="BALLS"
-						players={[
-							{ _id: 1, name: "Jen" },
-							{ _id: 2, name: "Dean" },
-							{ _id: 3, name: "Max" }
-						]}
-					/>
-				);
+				// return (
+				// 	<WaitingRoomScreen
+				// 		code="BALLS"
+				// 		players={[
+				// 			{ _id: 1, name: "Jen" },
+				// 			{ _id: 2, name: "Dean" },
+				// 			{ _id: 3, name: "Max" }
+				// 		]}
+				// 	/>
+				// );
+				return <WaitingRoomScreenContainer id={this.props.room._id} />;
 				break;
 			case "active":
 				return this.renderActiveGameScreen();

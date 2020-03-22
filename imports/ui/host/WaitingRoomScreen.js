@@ -9,7 +9,6 @@ export default class WaitingRoomScreen extends React.Component {
 	render() {
 		return (
 			<div>
-				<strong>Number of rooms:</strong> {this.props.numRooms}
 				<h1> Game code</h1>
 				{this.props.code}
 				<h1>Players in this game:</h1>
@@ -22,6 +21,5 @@ export default class WaitingRoomScreen extends React.Component {
 
 WaitingRoomScreen.propTypes = {
 	code: PropTypes.string,
-	numRooms: PropTypes.integer,
 	players: PropTypes.array
 };
