@@ -28,7 +28,13 @@ Meteor.methods({
     });
   },
   'rooms.removePlayer'(playerID) {
-    // todo
+    player = PlayersCollection.find({_id: playerID}).fetch()[0];
+    room = RoomsCollection.find({_id: player.roomID}).fetch()[0];
+    players = room.players.filter(function(player) {
+      return player._id != playerID; });
+    RoomsCollection.update(room._id, {
+      $set: { players: players }
+    });
   },
   'rooms.start'(roomID) {
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
