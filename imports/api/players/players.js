@@ -4,9 +4,10 @@ export const PlayersCollection = new Mongo.Collection('players');
 
 Meteor.methods({
   'players.create'(name, browserKey){
-    player = PlayerCollection.insert({
+    player = PlayersCollection.insert({
       name: name,
       browserKey: browserKey,
     });
+    console.log("Created a player: " + player);
   },
 });

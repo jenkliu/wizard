@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { LinksCollection } from '/imports/api/links';
 import { RoomsCollection } from '/imports/api/rooms/rooms';
+import { PlayersCollection } from '/imports/api/players/players';
 
 function insertLink({ title, url }) {
   LinksCollection.insert({title, url, createdAt: new Date()});
