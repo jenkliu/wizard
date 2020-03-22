@@ -104,7 +104,7 @@ Meteor.methods({
       rounds: [],
       currRound: null
     });
-    console.log('Made a room with ID: ' + room);
+    return room._id
   },
   'rooms.addPlayer'(playerID) {
     player = PlayersCollection.find({ _id: playerID }).fetch()[0];
