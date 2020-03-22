@@ -222,6 +222,9 @@ Meteor.methods({
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
       return !((handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type))
     });
+    if (playerCards.length == currRound.playerIDsToCards[playerID].length) {
+      throw new Meteor.Error('card not in hand');
+    }
     currRound.playerIDsToCards[playerID] = playerCards;
   
     RoomsCollection.update(roomID, {
@@ -229,6 +232,13 @@ Meteor.methods({
     });
   },
   'rooms.tricks.finish'(roomID) {
-    // todo: set the winning player ID
+    // todo: throw an error if not everyone has played a card
+
+    // IF THERE IS AT LEAST 1 WIZARD: apply wizard logic
+    // IF THERE ARE ALL JESTERS: whoever went first
+
+    // otherwise, look at only the Standard cards
+    // highest trump card wins
+    // otherwise, highest leadCard wins
   },
 });
