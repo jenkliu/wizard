@@ -12,7 +12,12 @@ function getNextPlayerID(players, currentPlayerID) {
   return playerIDs[(playerIDs.indexOf(currentPlayerID) + 1) % playerIDs.length];
 }
 
-function isLegalPlay(trickLeadCard, hand, card) {
+export function isLegalPlay(trickLeadCard, hand, card) {
+  // Make sure the card exists in the hand!
+  matchingCards = hand.filter(function(handCard) {
+      return (handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type); });
+  if (matchingCards.length == 0) { return false; }
+
   if (trickLeadCard == null) {
     return true;
   } else if (card.type == "Wizard" || card.type == "Jester") {
@@ -246,7 +251,6 @@ Meteor.methods({
     if (playerID != room.currRound.activePlayerID) {
       throw new Meteor.Error('action taken by non-active player');
     }
-    // todo: throw error if the player doesn't actually have that card
 
     if (!isLegalPlay(currRound.currTrick.leadCard, currRound.playerIDsToCards[playerID], card)) {
       throw new Meteor.Error('illegal move')
@@ -261,9 +265,6 @@ Meteor.methods({
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
       return !((handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type))
     });
-    if (playerCards.length == currRound.playerIDsToCards[playerID].length) {
-      throw new Meteor.Error('card not in hand');
-    }
     currRound.playerIDsToCards[playerID] = playerCards;
   
     RoomsCollection.update(roomID, {
