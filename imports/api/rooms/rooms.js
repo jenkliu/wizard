@@ -129,7 +129,9 @@ Meteor.methods({
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
-    if (playerID != room.currRound.activePlayerID) { return; }
+    if (playerID != room.currRound.activePlayerID) {
+      throw new Meteor.Error('action taken by non-active player');
+    }
 
     currRound = room.currRound;
     currRound.playerIDsToBids[playerID] = bid;
