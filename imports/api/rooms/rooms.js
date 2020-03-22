@@ -6,7 +6,9 @@ export const RoomsCollection = new Mongo.Collection('rooms');
 var shuffle = require('shuffle-array');
 
 function getNextPlayerID(players, currentPlayerID) {
-  playerIDs = players.map(function(player){ return player._id });
+  playerIDs = players.map(function(player) {
+    return player._id;
+  });
   return playerIDs[(playerIDs.indexOf(currentPlayerID) + 1) % playerIDs.length];
 }
 
@@ -139,6 +141,7 @@ Meteor.methods({
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
+    console.log('Bid updated', room);
   },
   'rooms.rounds.beginPlay'(roomID) {
     // todo: change round state from "bid" to "play"
