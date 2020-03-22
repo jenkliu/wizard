@@ -207,16 +207,16 @@ Meteor.methods({
     // todo: throw error if the bids aren't in yet
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
-    currRound.state = "play";
+    currRound.state = 'play';
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
   },
-  'rooms.rounds.playerIDsToTricksWon'(round) {
-    // todo: helper function to determine which tricks were won by which players
-  },
   'rooms.rounds.playerIDsToScores'(round) {
-    // todo: helper function to determine the scores of each round
+    playerIDs = Object.keys(round.playerIDsToBids);
+
+    // todo: for each player, compare the values in round.playerIDstoBids
+    // and round.tricks(&:winningPlayerID) counts
   },
 
   'rooms.tricks.start'(roomID) {
@@ -290,4 +290,12 @@ Meteor.methods({
       $set: { currRound: currRound }
     });
   },
+  'rooms.rounds.finish'(roomID) {
+    // todo: push currRound.currTrick onto currRound.tricks
+    // todo: currRound.state = 'finished'
+  },
+  'rooms.finish'(roomID) {
+    // todo: push currRound onto rounds
+    // todo: room.gameState = 'finished'
+  }
 });
