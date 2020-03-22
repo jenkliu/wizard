@@ -30,3 +30,9 @@ body {
   color: #fff;
   font-size: 28px;
 }
+.clickable-card.is-active {
+  border: 3px solid #ffa500;
+}
+.clickable-card:hover {
+  cursor: pointer;
+}

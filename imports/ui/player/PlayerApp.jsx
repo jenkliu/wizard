@@ -34,7 +34,7 @@ class PlayerApp extends React.Component {
 						{ suit: null, value: null, type: 'Jester' },
 						{ suit: null, value: null, type: 'Wizard' }
 					]}
-					currRoundState="bid"
+					currRoundState="play"
 					myPlayer={{ _id: 1, name: 'Jen' }}
 					activePlayer={{ _id: 1, name: 'Jen' }}
 					submitBid={this.submitBid}
