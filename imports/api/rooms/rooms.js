@@ -40,7 +40,7 @@ Meteor.methods({
   'rooms.rounds.start'(roomID) {
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
 
-    // update historical rounds array
+    // Update historical rounds array
     rounds = room.rounds;
     if(room.currRound) {
       rounds.push(room.currRound);
@@ -51,7 +51,6 @@ Meteor.methods({
       return map;
     }, {});
 
-    // initialize round
     RoomsCollection.update(roomID, {
       $set: {
         rounds: rounds,
@@ -69,6 +68,8 @@ Meteor.methods({
     });
   },
   'rooms.rounds.deal'(roomID) {
+    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+
     deck = []
     suits = ["Spades", "Hearts", "Clubs", "Diamonds"];
     suits.forEach(function(suit){
@@ -80,15 +81,31 @@ Meteor.methods({
         });
       };
     });
-    shuffle(deck)
+    shuffle(deck);
+    // Set trumpCard, ensuring (for now) that it's neither a Wizard nor a
+    // Jester.
     trumpCard = deck.pop();
 
-    // todo: add 4 wizards and 4 jesters
-    // todo: deal out to players
+    // Add Wizards and Jesters
+    for (i = 0; i < 4; i++) {
+      deck.push({suit: null, value: null, type: "Wizard"});
+      deck.push({suit: null, value: null, type: "Jester"});
+    };
+    shuffle(deck);
 
-    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+    // Deal out
+    playerIDsToCards = {};
+    room.players.forEach(function(player){
+      hand = [];
+      for (i = 0; i < room.currRound.numTricks; i++) {
+        hand.push(deck.pop());
+      };
+      playerIDsToCards[player._id] = hand;
+    });
+
     currRound = room.currRound;
     currRound.trumpCard = trumpCard;
+    currRound.playerIDsToCards = playerIDsToCards;
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
