@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Card } from "../Card";
+import Card from "../Card";
 
 export default class Gameplay extends React.Component {
   renderPlayer(player) {
@@ -10,7 +10,11 @@ export default class Gameplay extends React.Component {
       <div className="player-card-container" key={player._id}>
         <div className="player-card">
           {cardPlayed ? (
-            <Card value={cardPlayed.value} suit={cardPlayed.suit} />
+            <Card
+              value={cardPlayed.value}
+              suit={cardPlayed.suit}
+              type={cardPlayed.type}
+            />
           ) : (
             <div className="placeholder-card" />
           )}
@@ -30,6 +34,7 @@ export default class Gameplay extends React.Component {
           <Card
             value={this.props.trumpCard.value}
             suit={this.props.trumpCard.suit}
+            type={this.props.trumpCard.type}
           />
           Trump
         </div>
