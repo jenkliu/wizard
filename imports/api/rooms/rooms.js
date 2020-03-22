@@ -127,6 +127,8 @@ Meteor.methods({
     });
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
+    // TODO: throw error if we haven't dealt yet
+
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
     if (playerID != room.currRound.activePlayerID) {
@@ -141,7 +143,13 @@ Meteor.methods({
     });
   },
   'rooms.rounds.beginPlay'(roomID) {
-    // todo: change round state from "bid" to "play"
+    // todo: throw error if the bids aren't in yet
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound;
+    currRound.state = "play";
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.rounds.playerIDsToTricksWon'(round) {
     // todo: helper function to determine which tricks were won by which players
@@ -152,6 +160,7 @@ Meteor.methods({
 
   'rooms.tricks.start'(roomID) {
     // todo: move currTrick to the tricks array
+    // todo: if currTrick exists, use it to set leadPlayerID
     // todo: set currTrick
     currTrick = {
       leadPlayerID: '',
@@ -162,5 +171,8 @@ Meteor.methods({
   },
   'rooms.tricks.playCard'(roomID, playerID, card) {
     // todo:
-  }
+  },
+  'rooms.tricks.finish'(roomID) {
+    // todo: set the winning player ID
+  },
 });
