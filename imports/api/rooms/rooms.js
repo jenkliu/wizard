@@ -29,6 +29,42 @@ function isLegalPlay(trickLeadCard, hand, card) {
   return false;
 }
 
+function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlayerIDs) {
+  // If a wizard is played, the first wizard wins.
+  for (i = 0; i < orderedPlayerIDs.length; i++) {
+    if (trickCards[orderedPlayerIDs[i]].type == "Wizard") {
+      return orderedPlayerIDs[i];
+    }
+  }
+  
+  // If all cards are jesters, the first card wins.
+  isAllJesters = true;
+  for ([k, v] of Object.entries(trickCards)) {
+    if (v.type != 'Jester') { isAllJesters = false; }
+  }
+  if (isAllJesters) { return orderedPlayerIDs[0]; }
+  
+  // Otherwise, the best standard card wins.
+  standardCards = Object.entries(trickCards).filter(function([id, card]) {
+    return card.type == "Standard";
+  });
+  // Trump suit > led suit > other suits
+  suitValues = {'C': 0, 'D': 0, 'H': 0, 'S': 0};
+  suitValues[leadCard.suit] = 1;
+  suitValues[trumpCard.suit] = 2;
+
+  // Sort the standard cards in descending order of quality
+  standardCards.sort(function([id1, c1], [id2, c2]) {
+    if (suitValues[c1.suit] != suitValues[c2.suit]) {
+      return suitValues[c2.suit] - suitValues[c1.suit];
+    } else {
+      return c2.value - c1.value;
+    }
+  });
+  
+  return standardCards[0][0];
+}
+
 Meteor.methods({
   'rooms.create'() {
     room = RoomsCollection.insert({
@@ -235,13 +271,33 @@ Meteor.methods({
     });
   },
   'rooms.tricks.finish'(roomID) {
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound
     // todo: throw an error if not everyone has played a card
 
-    // IF THERE IS AT LEAST 1 WIZARD: apply wizard logic
-    // IF THERE ARE ALL JESTERS: whoever went first
+    orderedPlayerIDs = []
+    playerIDs = room.players.map(function(p) { return p._id; });
+    leadPlayerIndex = playerIDs.indexOf(currRound.currTrick.leadPlayerID);
+    for (i = 0; i < playerIDs.length; i++) {
+      orderedPlayerIDs.push(playerIDs[(leadPlayerIndex + i) % playerIDs.length]);
+    }
 
-    // otherwise, look at only the Standard cards
-    // highest trump card wins
-    // otherwise, highest leadCard wins
+    // todo: turn this into a test
+    // getWinningPlayerID({
+    //   'a': {suit: 'S', value: 7, type: 'Standard'},
+    //   'b': {suit: 'S', value: 11, type: 'Standard'},
+    //   'c': {suit: 'D', value: 7, type: 'Standard'},
+    // },
+    // {suit: 'S', value: 7, type: 'Standard'},
+    // {suit: 'D', value: 9, type: 'Standard'},
+    // ['a', 'b', 'c']
+    // );
+
+    currRound.currTrick.winningPlayerID = getWinningPlayerID(
+      room.currRound.currTrick.playerIDsToCards, currRound.currTrick.leadCard,
+      currRound.trumpCard, orderedPlayerIDs);
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
 });
