@@ -2,6 +2,8 @@ import { Mongo } from "meteor/mongo";
 
 export const RoomsCollection = new Mongo.Collection("rooms");
 
+var shuffle = require('shuffle-array')
+
 Meteor.methods({
 	'rooms.create'() {
     room = RoomsCollection.insert({
@@ -57,7 +59,7 @@ Meteor.methods({
           state: "bid",
           activePlayer: null, // todo: set activePlayer
           playerIDsToBids: playerIDsToBids,
-          numTricks: 69, // todo: set numTricks from numTricksArr
+          numTricks: 5, // todo: set numTricks from numTricksArr
           playerIDsToCards: {},
           trumpCard: null,
           tricks: [],
@@ -67,8 +69,29 @@ Meteor.methods({
     });
   },
   'rooms.rounds.deal'(roomID) {
-    // todo: set trumpCard (can't be a wizard)
-    // todo: set playerIDsToCards
+    deck = []
+    suits = ["Spades", "Hearts", "Clubs", "Diamonds"];
+    suits.forEach(function(suit){
+      for (value = 1; value <= 13; value++) {
+        deck.push({
+          suit: suit,
+          value: value,
+          type: "Standard",
+        });
+      };
+    });
+    shuffle(deck)
+    trumpCard = deck.pop();
+
+    // todo: add 4 wizards and 4 jesters
+    // todo: deal out to players
+
+    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+    currRound = room.currRound;
+    currRound.trumpCard = trumpCard;
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
