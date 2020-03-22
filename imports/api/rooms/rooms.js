@@ -1,4 +1,5 @@
 import { Mongo } from "meteor/mongo";
+import { PlayersCollection } from '/imports/api/players/players';
 
 export const RoomsCollection = new Mongo.Collection("rooms");
 
@@ -10,30 +11,23 @@ Meteor.methods({
       gameState: "waiting",
       code: "BALLS",
       createdAt: new Date(),
-      players: [
-        {
-          _id: 1,
-          name: "Dean"
-        },
-        {
-          _id: 2,
-          name: "Jennifer"
-        },
-        {
-          _id: 3,
-          name: "Bruno"
-        }
-      ],
+      players: [],
       numTricksArr: [1, 2, 3, 4, 5],
       rounds: [],
       currRound: null,
     });
     console.log("Made a room with ID: " + room);
   },
-  'rooms.addPlayer'(roomID, playerID) {
-    // todo
+  'rooms.addPlayer'(playerID) {
+    player = PlayersCollection.find({_id: playerID}).fetch()[0];
+    room = RoomsCollection.find({_id: player.roomID}).fetch()[0];
+    players = room.players;
+    players.push(player);
+    RoomsCollection.update(room._id, {
+      $set: { players: players }
+    });
   },
-  'rooms.removePlayer'(roomID, playerID) {
+  'rooms.removePlayer'(playerID) {
     // todo
   },
   'rooms.start'(roomID) {
