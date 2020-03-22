@@ -39,7 +39,7 @@ Meteor.methods({
   'rooms.start'(roomID) {
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
     RoomsCollection.update(roomID, {
-      $set: { gameState: "active" }
+      $set: { gameState: "active", players: shuffle(room.players) }
     });
   },
 
@@ -51,20 +51,24 @@ Meteor.methods({
     if(room.currRound) {
       rounds.push(room.currRound);
     };
+    roundsPlayed = rounds.length; // gratuitously self-documenting, lol
 
     playerIDsToBids = room.players.reduce(function(map, obj) {
       map[obj._id] = null;
       return map;
     }, {});
 
+    // Action starts with the player 'after' the dealer.
+    activePlayer = room.players[(roundsPlayed + 1) % room.players.length];
+
     RoomsCollection.update(roomID, {
       $set: {
         rounds: rounds,
         currRound: {
           state: "bid",
-          activePlayer: null, // todo: set activePlayer
+          activePlayerID: activePlayer._id,
           playerIDsToBids: playerIDsToBids,
-          numTricks: 5, // todo: set numTricks from numTricksArr
+          numTricks: room.numTricksArr[roundsPlayed],
           playerIDsToCards: {},
           trumpCard: null,
           tricks: [],
