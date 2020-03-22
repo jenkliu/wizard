@@ -9,7 +9,7 @@ import WaitingRoomScreen from './WaitingRoomScreen';
 import BidScreen from './BidScreen';
 import GameplayScreen from './GameplayScreen';
 
-class App extends React.Component {
+class HostApp extends React.Component {
 	startGame = () => {
 		Meteor.call('rooms.start', this.props.room._id);
 		Meteor.call('rooms.rounds.start', this.props.room._id);
@@ -83,4 +83,4 @@ export default withTracker(() => {
 		// TODO: properly fetch the correct room
 		room: rooms[rooms.length - 1]
 	};
-})(App);
+})(HostApp);

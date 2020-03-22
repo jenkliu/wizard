@@ -3,8 +3,8 @@ import { Router, Route, Switch } from 'react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 // route components
-import HostApp from '../../ui/host/App';
-import PlayerApp from '../../ui/player/App';
+import HostApp from '../../ui/host/HostApp';
+import PlayerApp from '../../ui/player/PlayerApp';
 
 const browserHistory = createBrowserHistory();
 
