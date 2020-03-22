@@ -15,46 +15,56 @@ function getNextPlayerID(players, currentPlayerID) {
 export function isLegalPlay(trickLeadCard, hand, card) {
   // Make sure the card exists in the hand!
   matchingCards = hand.filter(function(handCard) {
-      return (handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type); });
-  if (matchingCards.length == 0) { return false; }
+    return handCard.suit == card.suit && handCard.value == card.value && handCard.type == card.type;
+  });
+  if (matchingCards.length == 0) {
+    return false;
+  }
 
   if (trickLeadCard == null) {
     return true;
-  } else if (card.type == "Wizard" || card.type == "Jester") {
+  } else if (card.type == 'Wizard' || card.type == 'Jester') {
     return true;
-  } else if (trickLeadCard.type == "Wizard") {
+  } else if (trickLeadCard.type == 'Wizard') {
     return true;
   } else if (trickLeadCard.suit == card.suit) {
     return true;
-  } else if (hand.filter(function(card) {
-      return card.suit == trickLeadCard.suit; }).length == 0) {
+  } else if (
+    hand.filter(function(card) {
+      return card.suit == trickLeadCard.suit;
+    }).length == 0
+  ) {
     return true;
   }
-  
+
   return false;
 }
 
 export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlayerIDs) {
   // If a wizard is played, the first wizard wins.
   for (i = 0; i < orderedPlayerIDs.length; i++) {
-    if (trickCards[orderedPlayerIDs[i]].type == "Wizard") {
+    if (trickCards[orderedPlayerIDs[i]].type == 'Wizard') {
       return orderedPlayerIDs[i];
     }
   }
-  
+
   // If all cards are jesters, the first card wins.
   isAllJesters = true;
   for ([k, v] of Object.entries(trickCards)) {
-    if (v.type != 'Jester') { isAllJesters = false; }
+    if (v.type != 'Jester') {
+      isAllJesters = false;
+    }
   }
-  if (isAllJesters) { return orderedPlayerIDs[0]; }
-  
+  if (isAllJesters) {
+    return orderedPlayerIDs[0];
+  }
+
   // Otherwise, the best standard card wins.
   standardCards = Object.entries(trickCards).filter(function([id, card]) {
-    return card.type == "Standard";
+    return card.type == 'Standard';
   });
   // Trump suit > led suit > other suits
-  suitValues = {'C': 0, 'D': 0, 'H': 0, 'S': 0};
+  suitValues = { C: 0, D: 0, H: 0, S: 0 };
   suitValues[leadCard.suit] = 1;
   suitValues[trumpCard.suit] = 2;
 
@@ -66,7 +76,7 @@ export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlaye
       return c2.value - c1.value;
     }
   });
-  
+
   return standardCards[0][0];
 }
 
@@ -95,7 +105,7 @@ export function getPlayerIDsToScores(round) {
 
 Meteor.methods({
   'rooms.create'() {
-    room = RoomsCollection.insert({
+    return RoomsCollection.insert({
       gameState: 'waiting',
       code: 'BALLS', // todo: make the code random, lol
       createdAt: new Date(),
@@ -104,7 +114,6 @@ Meteor.methods({
       rounds: [],
       currRound: null
     });
-    return room._id
   },
   'rooms.addPlayer'(playerID) {
     player = PlayersCollection.find({ _id: playerID }).fetch()[0];
@@ -239,7 +248,9 @@ Meteor.methods({
     // get total scores from all historical rounds
     // todo: test this, lol
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-    scores = room.rounds.map(function(round) { getPlayerIDsToScores(round) });
+    scores = room.rounds.map(function(round) {
+      getPlayerIDsToScores(round);
+    });
 
     playerIDs = Object.keys(round.playerIDsToBids);
     playerIDsToScores = {};
@@ -247,7 +258,7 @@ Meteor.methods({
       playerIDsToScores[playerIDs[i]] = 0;
     }
     return scores.reduce(function(playerIDsToScores, roundScores) {
-      for(i = 0; i < playerIDs.length; i++) {
+      for (i = 0; i < playerIDs.length; i++) {
         playerIDsToScores[playerIDs[i]] += roundScores[playerIDs[i]];
       }
       return playerIDsToScores;
@@ -260,7 +271,7 @@ Meteor.methods({
 
   'rooms.tricks.start'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-    currRound = room.currRound
+    currRound = room.currRound;
 
     // Update historical tricks array
     if (currRound.currTrick) {
@@ -276,62 +287,67 @@ Meteor.methods({
       // playing a Jester, followed by Player 2 playing an 8 of Clubs. Then,
       // Player 3 must also play a Club. In this case, we would set leadCard to
       // the 8 of Clubs.
-      leadCard: null,
+      leadCard: null
     };
-    
+
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
   },
   'rooms.tricks.playCard'(roomID, playerID, card) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-    currRound = room.currRound
+    currRound = room.currRound;
 
     if (playerID != room.currRound.activePlayerID) {
       throw new Meteor.Error('action taken by non-active player');
     }
 
     if (!isLegalPlay(currRound.currTrick.leadCard, currRound.playerIDsToCards[playerID], card)) {
-      throw new Meteor.Error('illegal move')
+      throw new Meteor.Error('illegal move');
     }
 
     currRound.currTrick.playerIDsToCards[playerID] = card;
-    if (!currRound.currTrick.leadCard && card.type != "Jester") {
+    if (!currRound.currTrick.leadCard && card.type != 'Jester') {
       currRound.currTrick.leadCard = card;
     }
     currRound.activePlayerID = getNextPlayerID(room.players, playerID);
 
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
-      return !((handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type))
+      return !(handCard.suit == card.suit && handCard.value == card.value && handCard.type == card.type);
     });
     currRound.playerIDsToCards[playerID] = playerCards;
-  
+
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
   },
   'rooms.tricks.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-    currRound = room.currRound
+    currRound = room.currRound;
     // todo: throw an error if not everyone has played a card
 
-    orderedPlayerIDs = []
-    playerIDs = room.players.map(function(p) { return p._id; });
+    orderedPlayerIDs = [];
+    playerIDs = room.players.map(function(p) {
+      return p._id;
+    });
     leadPlayerIndex = playerIDs.indexOf(currRound.currTrick.leadPlayerID);
     for (i = 0; i < playerIDs.length; i++) {
       orderedPlayerIDs.push(playerIDs[(leadPlayerIndex + i) % playerIDs.length]);
     }
 
     currRound.currTrick.winningPlayerID = getWinningPlayerID(
-      room.currRound.currTrick.playerIDsToCards, currRound.currTrick.leadCard,
-      currRound.trumpCard, orderedPlayerIDs);
+      room.currRound.currTrick.playerIDsToCards,
+      currRound.currTrick.leadCard,
+      currRound.trumpCard,
+      orderedPlayerIDs
+    );
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
   },
   'rooms.rounds.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-    currRound = room.currRound
+    currRound = room.currRound;
 
     // Clean up the last trick
     if (currRound.currTrick) {
