@@ -20,7 +20,7 @@ export default class PlayerApp extends React.Component {
 	}
 
 	joinGame = (name, browserKey, roomCode) => {
-		const playerId = Meteor.call('players.get_or_create', name, browserKey, roomCode, (error, result) => {
+		Meteor.call('players.get_or_create', name, browserKey, roomCode, (error, result) => {
 			if (error) console.error(error); // todo handle error
 			this.setState({ myPlayerId: result }); // todo: set room here
 			Meteor.call('rooms.addPlayer', result);

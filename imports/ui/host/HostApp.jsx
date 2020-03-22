@@ -4,95 +4,28 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 // these will all get converted to containers
 import WelcomeScreen from './WelcomeScreen';
-import WaitingRoomScreen from './WaitingRoomScreen';
+import HostRoom from './HostRoom';
 
-import BidScreen from './BidScreen';
-import GameplayScreen from './GameplayScreen';
+export default class HostApp extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			roomId: null
+		};
+	}
 
-class HostApp extends React.Component {
-	startGame = () => {
-		Meteor.call('rooms.start', this.props.room._id);
-		Meteor.call('rooms.rounds.start', this.props.room._id);
-		Meteor.call('rooms.rounds.deal', this.props.room._id);
-		Meteor.call('rooms.rounds.beginPlay', this.props.room._id);
-		Meteor.call('rooms.tricks.start', this.props.room._id);
+	createRoom = () => {
+		Meteor.call('rooms.create', (error, result) => {
+			if (error) console.error(error);
+			this.setState({ roomId: result });
+			console.log('set state', this.state);
+		});
 	};
-
-	renderActiveGameScreen() {
-		switch (this.props.room.currRound.state) {
-			case 'bid':
-				// Dummy code
-				// return (
-				// 	<BidScreen
-				// 		playerIdToBids={{ 1: 2, 2: 0, 3: null }}
-				// 		players={[
-				// 			{ _id: 1, name: "Jen" },
-				// 			{ _id: 2, name: "Dean" },
-				// 			{ _id: 3, name: "Max" }
-				// 		]}
-				// 	/>
-				// );
-				return (
-					<BidScreen playerIdToBids={this.props.room.currRound.playerIDsToBids} players={this.props.room.players} />
-				);
-				break;
-			case 'play':
-				// DUMMY CODE
-				// return (
-				// 	<GameplayScreen
-				// 		playerIdToBids={{ 1: 2, 2: 0, 3: 1 }}
-				// 		players={[{ _id: 1, name: 'Jen' }, { _id: 2, name: 'Dean' }, { _id: 3, name: 'Max' }]}
-				// 		trumpCard={{ suit: 'H', value: '5', type: 'Standard' }}
-				// 		currTrick={{
-				// 			cardsPlayed: {
-				// 				1: { suit: 'C', value: 10, type: 'Standard' },
-				// 				2: { suit: 'D', value: 13, type: 'Standard' },
-				// 				3: { suit: null, value: null, type: 'Jester' }
-				// 			}
-				// 		}}
-				// 	/>
-				// );
-				return (
-					// TODO: make gameplay screen show real data
-					<GameplayScreen
-						playerIdToBids={this.props.room.currRound.playerIDsToBids}
-						players={this.props.room.players}
-						trumpCard={this.props.room.currRound.trumpCard}
-						currTrick={this.props.room.currRound.currTrick}
-					/>
-				);
-				break;
-			default:
-				return <WelcomeScreen />;
-		}
-	}
-
-	renderRoomScreen() {
-		switch (this.props.room.gameState) {
-			case 'waiting':
-				return (
-					<WaitingRoomScreen code={this.props.room.code} players={this.props.room.players} startGame={this.startGame} />
-				);
-				break;
-			case 'active':
-				return this.renderActiveGameScreen();
-				break;
-			default:
-				return <WelcomeScreen />;
-		}
-	}
 
 	render() {
-		console.log(this.props.room);
-		return <div>{this.props.room ? this.renderRoomScreen() : <WelcomeScreen />}</div>;
+		if (this.state.roomId) {
+			return <HostRoom roomId={this.state.roomId} />;
+		}
+		return <WelcomeScreen createRoom={this.createRoom} />;
 	}
 }
-
-export default withTracker(() => {
-	Meteor.subscribe('rooms');
-	const rooms = RoomsCollection.find().fetch();
-	return {
-		// TODO: properly fetch the correct room
-		room: rooms[rooms.length - 1]
-	};
-})(HostApp);

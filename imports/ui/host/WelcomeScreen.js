@@ -1,10 +1,9 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export default class App extends React.Component {
-	createRoom = () => {
-		Meteor.call("rooms.create");
-	};
+// TODO: add ability to join existing room as a host
 
+export default class WelcomeScreen extends React.Component {
 	render() {
 		return (
 			<div>
@@ -13,8 +12,14 @@ export default class App extends React.Component {
 					src="https://previews.123rf.com/images/chudtsankov/chudtsankov1303/chudtsankov130300165/18573211-happy-wizard-with-open-arms.jpg"
 					width="200px"
 				/>
-				<button onClick={this.createRoom}>Create a room</button>
+				<p>
+					<button onClick={this.props.createRoom}>Create a room</button>
+				</p>
 			</div>
 		);
 	}
 }
+
+WelcomeScreen.propTypes = {
+	createRoom: PropTypes.func
+};
