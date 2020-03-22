@@ -70,6 +70,11 @@ export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlaye
   return standardCards[0][0];
 }
 
+export function getPlayerIDsToScores(round) {
+  playerIDs = Object.keys(round.playerIDsToBids);
+  return 69;
+}
+
 Meteor.methods({
   'rooms.create'() {
     room = RoomsCollection.insert({
@@ -212,11 +217,12 @@ Meteor.methods({
       $set: { currRound: currRound }
     });
   },
-  'rooms.rounds.playerIDsToScores'(round) {
-    playerIDs = Object.keys(round.playerIDsToBids);
-
-    // todo: for each player, compare the values in round.playerIDstoBids
-    // and round.tricks(&:winningPlayerID) counts
+  'rooms.rounds.getPlayerIDsToScores'(roomID) {
+    // todo: call getPlayerIDsToScores on all historical rounds
+  },
+  'rooms.rounds.getCurrRoundPlayerIDsToScores'(roomID) {
+    // todo: call getPlayerIDsToScores
+    // todo: ensure that currRound state == finished
   },
 
   'rooms.tricks.start'(roomID) {

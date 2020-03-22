@@ -2,10 +2,30 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { assert } from 'chai';
 
-import { RoomsCollection, getWinningPlayerID, isLegalPlay } from './rooms.js';
+import { RoomsCollection, getWinningPlayerID, isLegalPlay, getRoundScore } from './rooms.js';
 
 if (Meteor.isServer) {
   describe('Rooms', () => {
+    describe('scores rounds properly', () => {
+      it('standard round, player c busts', () => {
+        scores = getRoundScore({
+          state: 'finished',
+          playerIDsToBids: {a: 2, b: 1, c: 1},
+          numTricks: 5,
+          tricks: [
+            {winningPlayerID: 'a'},
+            {winningPlayerID: 'a'},
+            {winningPlayerID: 'b'},
+            {winningPlayerID: 'c'},
+            {winningPlayerID: 'c'},
+          ]
+        });
+        assert.equal(scores.a, 40);
+        assert.equal(scores.b, 30);
+        assert.equal(scores.c, -10);
+      });
+    });
+
     describe('picks the right winners', () => {
       it('multiple wizards', () => {
         winningPlayerID = getWinningPlayerID({
