@@ -12,7 +12,12 @@ function getNextPlayerID(players, currentPlayerID) {
   return playerIDs[(playerIDs.indexOf(currentPlayerID) + 1) % playerIDs.length];
 }
 
-function isLegalPlay(trickLeadCard, hand, card) {
+export function isLegalPlay(trickLeadCard, hand, card) {
+  // Make sure the card exists in the hand!
+  matchingCards = hand.filter(function(handCard) {
+      return (handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type); });
+  if (matchingCards.length == 0) { return false; }
+
   if (trickLeadCard == null) {
     return true;
   } else if (card.type == "Wizard" || card.type == "Jester") {
@@ -29,7 +34,7 @@ function isLegalPlay(trickLeadCard, hand, card) {
   return false;
 }
 
-function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlayerIDs) {
+export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlayerIDs) {
   // If a wizard is played, the first wizard wins.
   for (i = 0; i < orderedPlayerIDs.length; i++) {
     if (trickCards[orderedPlayerIDs[i]].type == "Wizard") {
@@ -246,7 +251,6 @@ Meteor.methods({
     if (playerID != room.currRound.activePlayerID) {
       throw new Meteor.Error('action taken by non-active player');
     }
-    // todo: throw error if the player doesn't actually have that card
 
     if (!isLegalPlay(currRound.currTrick.leadCard, currRound.playerIDsToCards[playerID], card)) {
       throw new Meteor.Error('illegal move')
@@ -261,9 +265,6 @@ Meteor.methods({
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
       return !((handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type))
     });
-    if (playerCards.length == currRound.playerIDsToCards[playerID].length) {
-      throw new Meteor.Error('card not in hand');
-    }
     currRound.playerIDsToCards[playerID] = playerCards;
   
     RoomsCollection.update(roomID, {
@@ -281,17 +282,6 @@ Meteor.methods({
     for (i = 0; i < playerIDs.length; i++) {
       orderedPlayerIDs.push(playerIDs[(leadPlayerIndex + i) % playerIDs.length]);
     }
-
-    // todo: turn this into a test
-    // getWinningPlayerID({
-    //   'a': {suit: 'S', value: 7, type: 'Standard'},
-    //   'b': {suit: 'S', value: 11, type: 'Standard'},
-    //   'c': {suit: 'D', value: 7, type: 'Standard'},
-    // },
-    // {suit: 'S', value: 7, type: 'Standard'},
-    // {suit: 'D', value: 9, type: 'Standard'},
-    // ['a', 'b', 'c']
-    // );
 
     currRound.currTrick.winningPlayerID = getWinningPlayerID(
       room.currRound.currTrick.playerIDsToCards, currRound.currTrick.leadCard,

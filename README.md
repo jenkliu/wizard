@@ -7,6 +7,9 @@ HOW DO I CALL MONGO FUNCTION FROM THE COMMAND LINE? rather than using the UI
 meteor shell
 Meteor.call('rooms.create')
 
+TESTING
+`meteor test --driver-package meteortesting:mocha --port 6669`
+
 WAITING FOR PEOPLE TO JOIN:
 
 Start by creating a room: `rooms.create`
@@ -18,4 +21,5 @@ PLAYING THE GAME
 
 Initialize a round: `rooms.rounds.start` then `rooms.rounds.deal`
 Bidding phase: update peoples' bids with `rooms.rounds.updateBid`
+
 

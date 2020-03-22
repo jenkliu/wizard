@@ -1,4 +1,5 @@
 import assert from "assert";
+import "../imports/api/rooms/rooms.tests.js"
 
 describe("wizard", function () {
   it("package.json has correct name", async function () {
