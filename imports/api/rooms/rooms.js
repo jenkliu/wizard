@@ -71,6 +71,7 @@ export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlaye
 }
 
 export function getPlayerIDsToScores(round) {
+  // todo: throw error if the round hasn't ended
   playerIDs = Object.keys(round.playerIDsToBids);
   playerIDsToTricksTaken = {};
   playerIDsToScores = {};
@@ -235,11 +236,26 @@ Meteor.methods({
     });
   },
   'rooms.rounds.getPlayerIDsToScores'(roomID) {
-    // todo: call getPlayerIDsToScores on all historical rounds
+    // get total scores from all historical rounds
+    // todo: test this, lol
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    scores = room.rounds.map(function(round) { getPlayerIDsToScores(round) });
+
+    playerIDs = Object.keys(round.playerIDsToBids);
+    playerIDsToScores = {};
+    for (i = 0; i < playerIDs.length; i++) {
+      playerIDsToScores[playerIDs[i]] = 0;
+    }
+    return scores.reduce(function(playerIDsToScores, roundScores) {
+      for(i = 0; i < playerIDs.length; i++) {
+        playerIDsToScores[playerIDs[i]] += roundScores[playerIDs[i]];
+      }
+      return playerIDsToScores;
+    }, playerIDsToScores);
   },
   'rooms.rounds.getCurrRoundPlayerIDsToScores'(roomID) {
-    // todo: call getPlayerIDsToScores
-    // todo: ensure that currRound state == finished
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    return getPlayerIDsToScores(room.currRound);
   },
 
   'rooms.tricks.start'(roomID) {
