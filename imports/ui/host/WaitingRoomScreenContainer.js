@@ -10,8 +10,7 @@ const WaitingRoomScreenContainer = withTracker(() => {
 	const rooms = RoomsCollection.find().fetch();
 	return {
 		// TODO make this less hacky
-		code: rooms.length > 0 ? rooms[0].code : null,
-		numRooms: rooms.length
+		code: rooms.length > 0 ? rooms[0].code : null
 	};
 })(WaitingRoomScreen);
 
