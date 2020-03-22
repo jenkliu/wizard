@@ -1,12 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class WaitingRoomScreen extends React.Component {
-	// startGame = () => {
-	// 	Meteor.call("rooms.start", this.props.roomId);
-	// 	Meteor.call("rooms.rounds.start", this.props.roomId);
-	// };
-
 	renderPlayer(player) {
 		return <ul key={player._id}>{player.name}</ul>;
 	}
@@ -28,5 +23,4 @@ WaitingRoomScreen.propTypes = {
 	code: PropTypes.string,
 	players: PropTypes.array,
 	startGame: PropTypes.func
-	// roomId: PropTypes.string
 };

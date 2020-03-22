@@ -1,20 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Card from "../Card";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Card from '../Card';
 
 export default class Gameplay extends React.Component {
   renderPlayer(player) {
-    const cardPlayed = this.props.currTrick.cardsPlayed[player._id];
+    const cardPlayed = this.props.currTrick.playerIDsToCards[player._id];
 
     return (
       <div className="player-card-container" key={player._id}>
         <div className="player-card">
           {cardPlayed ? (
-            <Card
-              value={cardPlayed.value}
-              suit={cardPlayed.suit}
-              type={cardPlayed.type}
-            />
+            <Card value={cardPlayed.value} suit={cardPlayed.suit} type={cardPlayed.type} />
           ) : (
             <div className="placeholder-card" />
           )}
@@ -31,16 +27,10 @@ export default class Gameplay extends React.Component {
       <div>
         <h1>Game on!</h1>
         <div className="trump-card">
-          <Card
-            value={this.props.trumpCard.value}
-            suit={this.props.trumpCard.suit}
-            type={this.props.trumpCard.type}
-          />
+          <Card value={this.props.trumpCard.value} suit={this.props.trumpCard.suit} type={this.props.trumpCard.type} />
           Trump
         </div>
-        <div className="player-cards-container">
-          {this.props.players.map(player => this.renderPlayer(player))}
-        </div>
+        <div className="player-cards-container">{this.props.players.map(player => this.renderPlayer(player))}</div>
       </div>
     );
   }
