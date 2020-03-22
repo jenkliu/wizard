@@ -30,6 +30,12 @@ Meteor.methods({
     });
     console.log("Made a room with ID: " + room);
   },
+  'rooms.addPlayer'(roomID, playerID) {
+    // todo
+  },
+  'rooms.removePlayer'(roomID, playerID) {
+    // todo
+  },
   'rooms.start'(roomID) {
     room = RoomsCollection.find({_id: roomID}).fetch()[0];
     RoomsCollection.update(roomID, {
@@ -144,4 +150,4 @@ Meteor.methods({
   'rooms.tricks.playCard'(roomID, playerID, card) {
     // todo: 
   },
-})
+});
