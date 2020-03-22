@@ -37,19 +37,28 @@ class HostApp extends React.Component {
 				);
 				break;
 			case 'play':
+				// DUMMY CODE
+				// return (
+				// 	<GameplayScreen
+				// 		playerIdToBids={{ 1: 2, 2: 0, 3: 1 }}
+				// 		players={[{ _id: 1, name: 'Jen' }, { _id: 2, name: 'Dean' }, { _id: 3, name: 'Max' }]}
+				// 		trumpCard={{ suit: 'H', value: '5', type: 'Standard' }}
+				// 		currTrick={{
+				// 			cardsPlayed: {
+				// 				1: { suit: 'C', value: 10, type: 'Standard' },
+				// 				2: { suit: 'D', value: 13, type: 'Standard' },
+				// 				3: { suit: null, value: null, type: 'Jester' }
+				// 			}
+				// 		}}
+				// 	/>
+				// );
 				return (
 					// TODO: make gameplay screen show real data
 					<GameplayScreen
-						playerIdToBids={{ 1: 2, 2: 0, 3: 1 }}
-						players={[{ _id: 1, name: 'Jen' }, { _id: 2, name: 'Dean' }, { _id: 3, name: 'Max' }]}
-						trumpCard={{ suit: 'H', value: '5', type: 'Standard' }}
-						currTrick={{
-							cardsPlayed: {
-								1: { suit: 'C', value: 10, type: 'Standard' },
-								2: { suit: 'D', value: 13, type: 'Standard' },
-								3: { suit: null, value: null, type: 'Jester' }
-							}
-						}}
+						playerIdToBids={this.props.room.currRound.playerIDsToBids}
+						players={this.props.room.players}
+						trumpCard={this.props.room.currRound.trumpCard}
+						currTrick={this.props.room.currRound.currTrick}
 					/>
 				);
 				break;
