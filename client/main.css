@@ -7,3 +7,15 @@ body {
   width: 25%;
   justify-content: space-between;
 }
+.player-cards-container {
+  display: flex;
+  justify-content: space-between;
+}
+.placeholder-card {
+  width: 48px;
+  height: 80px;
+  background-color: #fff;
+  border: 1px solid #000;
+  margin: 16px;
+  padding: 4px;
+}

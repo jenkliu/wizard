@@ -19,7 +19,7 @@ export default class App extends React.Component {
 					]}
 				/>
 				<BidScreen
-					playerIdToBids={{ 1: 2, 2: 0, 3: undefined }}
+					playerIdToBids={{ 1: 2, 2: 0, 3: null }}
 					players={[
 						{ _id: 1, name: "Jen" },
 						{ _id: 2, name: "Dean" },
@@ -39,13 +39,14 @@ export default class App extends React.Component {
 					width="200px"
 				/>
 				<GameplayScreen
-					playerIdToBids={{ 1: 2, 2: 0, 3: undefined }}
+					playerIdToBids={{ 1: 2, 2: 0, 3: 1 }}
 					players={[
 						{ _id: 1, name: "Jen" },
 						{ _id: 2, name: "Dean" },
 						{ _id: 3, name: "Max" }
 					]}
-					trumpCard={{ suit: "Heart", value: "5" }}
+					trumpCard={{ suit: "H", value: "5" }}
+					currTrick={{ cardsPlayed: { 1: { suit: "C", value: "10" } } }}
 				/>
 			</div>
 		);

@@ -22,7 +22,7 @@ export class Deck extends React.Component {
   }
 
   render() {
-    const suits = ["Spade", "Heart", "Club", "Diamond"];
+    const suits = ["S", "H", "C", "D"];
 
     const values = [
       "A",
@@ -67,16 +67,17 @@ export class Deck extends React.Component {
 
 const getSuitSymbol = suit => {
   const suitMap = {
-    Spade: "♠︎",
-    Heart: "♥︎",
-    Club: "♣︎",
-    Diamond: "♦︎"
+    S: "♠︎",
+    H: "♥︎",
+    C: "♣︎",
+    D: "♦︎"
   };
   return suitMap[suit];
 };
 
+// TODO: support wizards and jesters
 export const Card = props => {
-  if (props.suit == "Club" || props.suit == "Spade") {
+  if (props.suit == "C" || props.suit == "S") {
     return (
       <div className="card card-black">
         <div className="card-tl">

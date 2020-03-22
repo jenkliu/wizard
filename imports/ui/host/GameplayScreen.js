@@ -4,15 +4,20 @@ import { Card } from "../Card";
 
 export default class Gameplay extends React.Component {
   renderPlayer(player) {
-    return (
-      <div className="player-bid" key={player._id}>
-        <div className="player-name">{player.name}</div>
+    const cardPlayed = this.props.currTrick.cardsPlayed[player._id];
 
-        <div className="bid">
-          {this.props.playerIdToBids[player._id] !== null
-            ? this.props.playerIdToBids[player._id]
-            : "?"}
+    return (
+      <div className="player-card-container" key={player._id}>
+        <div className="player-card">
+          {cardPlayed ? (
+            <Card value={cardPlayed.value} suit={cardPlayed.suit} />
+          ) : (
+            <div className="placeholder-card" />
+          )}
         </div>
+
+        <div className="player-name">{player.name}</div>
+        <div className="bid">Bid: {this.props.playerIdToBids[player._id]}</div>
       </div>
     );
   }
@@ -28,7 +33,7 @@ export default class Gameplay extends React.Component {
           />
           Trump
         </div>
-        <div className="players">
+        <div className="player-cards-container">
           {this.props.players.map(player => this.renderPlayer(player))}
         </div>
       </div>
@@ -39,5 +44,6 @@ export default class Gameplay extends React.Component {
 Gameplay.propTypes = {
   playerIdToBids: PropTypes.object, // { player_id: bid}
   players: PropTypes.array,
-  trumpCard: PropTypes.object // card: { suit: 'Heart', value: 4, type: 'Standard'}
+  trumpCard: PropTypes.object, // card: { suit: 'H', value: '4', type: 'Standard'}
+  currTrick: PropTypes.object // {cardsPlayed: {playerId: card}}
 };
