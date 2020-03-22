@@ -3,13 +3,13 @@ import { RoomsCollection } from '/imports/api/rooms/rooms';
 import { withTracker } from 'meteor/react-meteor-data';
 
 // these will all get converted to containers
-import WelcomeScreen from './host/WelcomeScreen';
-import WaitingRoomScreen from './host/WaitingRoomScreen';
+import WelcomeScreen from './WelcomeScreen';
+import WaitingRoomScreen from './WaitingRoomScreen';
 
-import BidScreen from './host/BidScreen';
-import GameplayScreen from './host/GameplayScreen';
+import BidScreen from './BidScreen';
+import GameplayScreen from './GameplayScreen';
 
-class App extends React.Component {
+class HostApp extends React.Component {
 	startGame = () => {
 		Meteor.call('rooms.start', this.props.room._id);
 		Meteor.call('rooms.rounds.start', this.props.room._id);
@@ -83,4 +83,4 @@ export default withTracker(() => {
 		// TODO: properly fetch the correct room
 		room: rooms[rooms.length - 1]
 	};
-})(App);
+})(HostApp);
