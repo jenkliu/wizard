@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from '../Card';
+import ClickableCard from '../ClickableCard';
 
 export default class PlayerHandScreen extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { bid: 0 };
+		const cardsWithIds = props.cards.map((card, i) => {
+			return { id: i, ...card };
+		});
+		this.state = {
+			bid: 0,
+			activeCardId: null,
+			cardsWithIds
+		};
 	}
 
 	isMyTurn() {
@@ -30,10 +37,24 @@ export default class PlayerHandScreen extends React.Component {
 		);
 	}
 
+	handleClickCard = id => {
+		this.setState({ activeCardId: id });
+	};
+
 	// TODO make these fan out/scrollable in a carousel
 	// allow selection while it's my turn
-	renderCard(card, i) {
-		return <Card key={i} suit={card.suit} value={card.value} type={card.type} />;
+	renderClickableCard(cardWithId) {
+		const card = cardWithId;
+		return (
+			<ClickableCard
+				isActive={card.id === this.state.activeCardId}
+				onClick={this.handleClickCard.bind(this, card.id)}
+				key={card.id}
+				suit={card.suit}
+				value={card.value}
+				type={card.type}
+			/>
+		);
 	}
 
 	renderStatus() {
@@ -67,7 +88,7 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<div>
 				<div className="status">{this.renderStatus()}</div>
-				<div className="player-hand">{this.props.cards.map((card, i) => this.renderCard(card, i))}</div>
+				<div className="player-hand">{this.state.cardsWithIds.map(card => this.renderClickableCard(card))}</div>
 				{this.isMyTurn() ? this.renderCta() : null}
 			</div>
 		);
