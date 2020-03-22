@@ -45,8 +45,14 @@ export default class App extends React.Component {
 						{ _id: 2, name: "Dean" },
 						{ _id: 3, name: "Max" }
 					]}
-					trumpCard={{ suit: "H", value: "5" }}
-					currTrick={{ cardsPlayed: { 1: { suit: "C", value: "10" } } }}
+					trumpCard={{ suit: "H", value: "5", type: "Standard" }}
+					currTrick={{
+						cardsPlayed: {
+							1: { suit: "C", value: 10, type: "Standard" },
+							2: { suit: "D", value: 13, type: "Standard" },
+							3: { suit: null, value: null, type: "Wizard" }
+						}
+					}}
 				/>
 			</div>
 		);
