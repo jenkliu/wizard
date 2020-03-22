@@ -90,7 +90,7 @@ export default class PlayerHandScreen extends React.Component {
 			return this.renderBidInput();
 		} else {
 			return (
-				<button className="btn" onClick={this.handleClickPlayCard}>
+				<button disabled={this.state.activeCardId === null} className="btn" onClick={this.handleClickPlayCard}>
 					PLAY CARD
 				</button>
 			);
