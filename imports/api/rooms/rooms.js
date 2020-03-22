@@ -14,7 +14,7 @@ Meteor.methods({
   'rooms.create'() {
     room = RoomsCollection.insert({
       gameState: 'waiting',
-      code: 'BALLS',
+      code: 'BALLS', // todo: make the code random, lol
       createdAt: new Date(),
       players: [],
       numTricksArr: [1, 2, 3, 4, 5],
@@ -159,15 +159,24 @@ Meteor.methods({
   },
 
   'rooms.tricks.start'(roomID) {
-    // todo: move currTrick to the tricks array
-    // todo: if currTrick exists, use it to set leadPlayerID
-    // todo: set currTrick
-    currTrick = {
-      leadPlayerID: '',
-      winningPlayerID: '',
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound
+
+    // Update historical tricks array
+    if (currRound.currTrick) {
+      currRound.activePlayerID = currRound.currTrick.winningPlayerID;
+      currRound.tricks.push(currRound.currTrick);
+    }
+
+    currRound.currTrick = {
+      leadPlayerID: currRound.activePlayerID,
+      winningPlayerID: null,
       playerIDsToCards: {},
-      leadCard: ''
     };
+    
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.tricks.playCard'(roomID, playerID, card) {
     // todo:
