@@ -3,7 +3,7 @@ import { Mongo } from "meteor/mongo";
 export const RoomsCollection = new Mongo.Collection("rooms");
 
 Meteor.methods({
-	"rooms.create"() {
+	'rooms.create'() {
     room = RoomsCollection.insert({
       gameState: "waiting",
       code: "BALLS",
@@ -23,10 +23,16 @@ Meteor.methods({
         }
       ],
       numTricksArr: [1, 2, 3, 4, 5],
-      currRound: null,
       rounds: [],
+      currRound: null,
     });
     console.log("Made a room with ID: " + room);
+  },
+  'rooms.start'(roomID) {
+    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+    RoomsCollection.update(roomID, {
+      $set: { gameState: "active" }
+    });
   },
 
   'rooms.rounds.start'(roomID) {
@@ -49,24 +55,34 @@ Meteor.methods({
         rounds: rounds,
         currRound: {
           state: "bid",
-          activePlayer: null,
+          activePlayer: null, // todo: set activePlayer
           playerIDsToBids: playerIDsToBids,
-          numTricks: 69,
+          numTricks: 69, // todo: set numTricks from numTricksArr
           playerIDsToCards: {},
           trumpCard: null,
+          tricks: [],
           currTrick: null,
-          tricks: []
         }
       }
     });
-    // todo: call rooms.rounds.deal
-  },
-  'rooms.rounds.updateBid'(roomID, playerID, bid) {
-
   },
   'rooms.rounds.deal'(roomID) {
     // todo: set trumpCard (can't be a wizard)
     // todo: set playerIDsToCards
+  },
+  'rooms.rounds.updateBid'(roomID, playerID, bid) {
+    room = RoomsCollection.find({_id: roomID}).fetch()[0];
+    currRound = room.currRound;
+    currRound.playerIDsToBids[playerID] = bid;
+    RoomsCollection.update(roomID, {
+      $set: {
+        currRound: currRound,
+        // todo: update activePlayer to the next one
+      }
+    });
+  },
+  'rooms.rounds.beginPlay'(roomID) {
+    // todo: change round state from "bid" to "play"
   },
   'rooms.rounds.playerIDsToTricksWon'(round) {
     // todo: helper function to determine which tricks were won by which players
@@ -81,8 +97,11 @@ Meteor.methods({
     currTrick = {
       leadPlayerID: "",
       winningPlayerID: "",
-      cardsPlayed: {},
-      leadSuit: ""
+      playerIDsToCards: {},
+      leadCard: ""
     }
-  }
+  },
+  'rooms.tricks.playCard'(roomID, playerID, card) {
+    // todo: 
+  },
 })
