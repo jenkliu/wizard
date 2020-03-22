@@ -2,13 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { assert } from 'chai';
 
-import { RoomsCollection, getWinningPlayerID, isLegalPlay, getRoundScore } from './rooms.js';
+import { RoomsCollection, getWinningPlayerID, isLegalPlay, getPlayerIDsToScores } from './rooms.js';
 
 if (Meteor.isServer) {
   describe('Rooms', () => {
     describe('scores rounds properly', () => {
       it('standard round, player c busts', () => {
-        scores = getRoundScore({
+        scores = getPlayerIDsToScores({
           state: 'finished',
           playerIDsToBids: {a: 2, b: 1, c: 1},
           numTricks: 5,

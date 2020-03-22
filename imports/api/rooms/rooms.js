@@ -72,7 +72,24 @@ export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlaye
 
 export function getPlayerIDsToScores(round) {
   playerIDs = Object.keys(round.playerIDsToBids);
-  return 69;
+  playerIDsToTricksTaken = {};
+  playerIDsToScores = {};
+  for (i = 0; i < playerIDs.length; i++) {
+    playerIDsToTricksTaken[playerIDs[i]] = 0;
+  }
+  for (i = 0; i < round.tricks.length; i++) {
+    playerIDsToTricksTaken[round.tricks[i].winningPlayerID] += 1;
+  }
+  for (i = 0; i < playerIDs.length; i++) {
+    playerBid = round.playerIDsToBids[playerIDs[i]];
+    playerTricksTaken = playerIDsToTricksTaken[playerIDs[i]];
+    if (playerBid == playerTricksTaken) {
+      playerIDsToScores[playerIDs[i]] = 20 + 10 * playerBid;
+    } else {
+      playerIDsToScores[playerIDs[i]] = -10 * Math.abs(playerBid - playerTricksTaken);
+    }
+  }
+  return playerIDsToScores;
 }
 
 Meteor.methods({
