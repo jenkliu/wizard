@@ -13,6 +13,9 @@ class HostApp extends React.Component {
 	startGame = () => {
 		Meteor.call('rooms.start', this.props.room._id);
 		Meteor.call('rooms.rounds.start', this.props.room._id);
+		Meteor.call('rooms.rounds.deal', this.props.room._id);
+		Meteor.call('rooms.rounds.beginPlay', this.props.room._id);
+		Meteor.call('rooms.tricks.start', this.props.room._id);
 	};
 
 	renderActiveGameScreen() {
