@@ -29,7 +29,7 @@ function isLegalPlay(trickLeadCard, hand, card) {
   return false;
 }
 
-function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlayerIDs) {
+export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlayerIDs) {
   // If a wizard is played, the first wizard wins.
   for (i = 0; i < orderedPlayerIDs.length; i++) {
     if (trickCards[orderedPlayerIDs[i]].type == "Wizard") {
@@ -281,17 +281,6 @@ Meteor.methods({
     for (i = 0; i < playerIDs.length; i++) {
       orderedPlayerIDs.push(playerIDs[(leadPlayerIndex + i) % playerIDs.length]);
     }
-
-    // todo: turn this into a test
-    // getWinningPlayerID({
-    //   'a': {suit: 'S', value: 7, type: 'Standard'},
-    //   'b': {suit: 'S', value: 11, type: 'Standard'},
-    //   'c': {suit: 'D', value: 7, type: 'Standard'},
-    // },
-    // {suit: 'S', value: 7, type: 'Standard'},
-    // {suit: 'D', value: 9, type: 'Standard'},
-    // ['a', 'b', 'c']
-    // );
 
     currRound.currTrick.winningPlayerID = getWinningPlayerID(
       room.currRound.currTrick.playerIDsToCards, currRound.currTrick.leadCard,
