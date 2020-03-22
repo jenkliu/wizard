@@ -95,7 +95,7 @@ export function getPlayerIDsToScores(round) {
 
 Meteor.methods({
   'rooms.create'() {
-    room = RoomsCollection.insert({
+    return RoomsCollection.insert({
       gameState: 'waiting',
       code: 'BALLS', // todo: make the code random, lol
       createdAt: new Date(),
@@ -104,7 +104,6 @@ Meteor.methods({
       rounds: [],
       currRound: null
     });
-    return room._id
   },
   'rooms.addPlayer'(playerID) {
     player = PlayersCollection.find({ _id: playerID }).fetch()[0];
