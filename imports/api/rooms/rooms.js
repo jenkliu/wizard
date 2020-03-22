@@ -12,11 +12,28 @@ function getNextPlayerID(players, currentPlayerID) {
   return playerIDs[(playerIDs.indexOf(currentPlayerID) + 1) % playerIDs.length];
 }
 
+function isLegalPlay(trickLeadCard, hand, card) {
+  if (trickLeadCard == null) {
+    return true;
+  } else if (card.type == "Wizard" || card.type == "Jester") {
+    return true;
+  } else if (trickLeadCard.type == "Wizard") {
+    return true;
+  } else if (trickLeadCard.suit == card.suit) {
+    return true;
+  } else if (hand.filter(function(card) {
+      return card.suit == trickLeadCard.suit; }).length == 0) {
+    return true;
+  }
+  
+  return false;
+}
+
 Meteor.methods({
   'rooms.create'() {
     room = RoomsCollection.insert({
       gameState: 'waiting',
-      code: 'BALLS',
+      code: 'BALLS', // todo: make the code random, lol
       createdAt: new Date(),
       players: [],
       numTricksArr: [1, 2, 3, 4, 5],
@@ -129,6 +146,8 @@ Meteor.methods({
     });
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
+    // TODO: throw error if we haven't dealt yet
+
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
     if (playerID != room.currRound.activePlayerID) {
@@ -144,7 +163,13 @@ Meteor.methods({
     console.log('Bid updated', room);
   },
   'rooms.rounds.beginPlay'(roomID) {
-    // todo: change round state from "bid" to "play"
+    // todo: throw error if the bids aren't in yet
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound;
+    currRound.state = "play";
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.rounds.playerIDsToTricksWon'(round) {
     // todo: helper function to determine which tricks were won by which players
@@ -154,16 +179,69 @@ Meteor.methods({
   },
 
   'rooms.tricks.start'(roomID) {
-    // todo: move currTrick to the tricks array
-    // todo: set currTrick
-    currTrick = {
-      leadPlayerID: '',
-      winningPlayerID: '',
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound
+
+    // Update historical tricks array
+    if (currRound.currTrick) {
+      currRound.activePlayerID = currRound.currTrick.winningPlayerID;
+      currRound.tricks.push(currRound.currTrick);
+    }
+
+    currRound.currTrick = {
+      leadPlayerID: currRound.activePlayerID,
+      winningPlayerID: null,
       playerIDsToCards: {},
-      leadCard: ''
+      // NOTE: This isn't redundant - consider if a trick starts with Player 1
+      // playing a Jester, followed by Player 2 playing an 8 of Clubs. Then,
+      // Player 3 must also play a Club. In this case, we would set leadCard to
+      // the 8 of Clubs.
+      leadCard: null,
     };
+    
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
   },
   'rooms.tricks.playCard'(roomID, playerID, card) {
-    // todo:
-  }
+    room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound
+
+    if (playerID != room.currRound.activePlayerID) {
+      throw new Meteor.Error('action taken by non-active player');
+    }
+    // todo: throw error if the player doesn't actually have that card
+
+    if (!isLegalPlay(currRound.currTrick.leadCard, currRound.playerIDsToCards[playerID], card)) {
+      throw new Meteor.Error('illegal move')
+    }
+
+    currRound.currTrick.playerIDsToCards[playerID] = card;
+    if (!currRound.currTrick.leadCard && card.type != "Jester") {
+      currRound.currTrick.leadCard = card;
+    }
+    currRound.activePlayerID = getNextPlayerID(room.players, playerID);
+
+    playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
+      return !((handCard.suit == card.suit) && (handCard.value == card.value) && (handCard.type == card.type))
+    });
+    if (playerCards.length == currRound.playerIDsToCards[playerID].length) {
+      throw new Meteor.Error('card not in hand');
+    }
+    currRound.playerIDsToCards[playerID] = playerCards;
+  
+    RoomsCollection.update(roomID, {
+      $set: { currRound: currRound }
+    });
+  },
+  'rooms.tricks.finish'(roomID) {
+    // todo: throw an error if not everyone has played a card
+
+    // IF THERE IS AT LEAST 1 WIZARD: apply wizard logic
+    // IF THERE ARE ALL JESTERS: whoever went first
+
+    // otherwise, look at only the Standard cards
+    // highest trump card wins
+    // otherwise, highest leadCard wins
+  },
 });
