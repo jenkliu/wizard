@@ -10,6 +10,23 @@ function getNextPlayerID(players, currentPlayerID) {
   return playerIDs[(playerIDs.indexOf(currentPlayerID) + 1) % playerIDs.length];
 }
 
+function isLegalPlay(trickLeadCard, hand, card) {
+  if (trickLeadCard == null) {
+    return true;
+  } else if (card.type == "Wizard" || card.type == "Jester") {
+    return true;
+  } else if (trickLeadCard.type == "Wizard") {
+    return true;
+  } else if (trickLeadCard.suit == card.suit) {
+    return true;
+  } else if (hand.filter(function(card) {
+      return card.suit == trickLeadCard.suit; }).length == 0) {
+    return true;
+  }
+  
+  return false;
+}
+
 Meteor.methods({
   'rooms.create'() {
     room = RoomsCollection.insert({
@@ -172,6 +189,11 @@ Meteor.methods({
       leadPlayerID: currRound.activePlayerID,
       winningPlayerID: null,
       playerIDsToCards: {},
+      // NOTE: This isn't redundant - consider if a trick starts with Player 1
+      // playing a Jester, followed by Player 2 playing an 8 of Clubs. Then,
+      // Player 3 must also play a Club. In this case, we would set leadCard to
+      // the 8 of Clubs.
+      leadCard: null,
     };
     
     RoomsCollection.update(roomID, {
@@ -186,9 +208,15 @@ Meteor.methods({
       throw new Meteor.Error('action taken by non-active player');
     }
     // todo: throw error if the player doesn't actually have that card
-    // todo: check if the card is legal
+
+    if (!isLegalPlay(currRound.currTrick.leadCard, currRound.playerIDsToCards[playerID], card)) {
+      throw new Meteor.Error('illegal move')
+    }
 
     currRound.currTrick.playerIDsToCards[playerID] = card;
+    if (!currRound.currTrick.leadCard && card.type != "Jester") {
+      currRound.currTrick.leadCard = card;
+    }
     currRound.activePlayerID = getNextPlayerID(room.players, playerID);
 
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
