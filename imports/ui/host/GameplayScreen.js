@@ -28,20 +28,25 @@ export default class GameplayScreen extends React.Component {
           {cardPlayed ? (
             <Card value={cardPlayed.value} suit={cardPlayed.suit} type={cardPlayed.type} />
           ) : (
-            <div className="placeholder-card" />
+            <div className="placeholder-card">
+              {player._id === this.props.activePlayerId ? <span className="active-player-indicator">★</span> : null}
+            </div>
           )}
         </div>
 
         <div className="player-name">{player.name}</div>
-        <div className="bid">Bid: {this.props.playerIdToBids[player._id]}</div>
+        <div className="bid">
+          Bid: {this.props.playerIdToBids[player._id] != null ? this.props.playerIdToBids[player._id] : '?'}
+        </div>
       </div>
     );
   }
 
   render() {
+    const title = this.props.currRoundState === 'bid' ? 'Time to bid' : 'Game on!';
     return (
       <div>
-        <h1>Game on!</h1>
+        <h1>{title}</h1>
         <div className="trump-card">
           <Card value={this.props.trumpCard.value} suit={this.props.trumpCard.suit} type={this.props.trumpCard.type} />
           Trump
@@ -56,6 +61,8 @@ GameplayScreen.propTypes = {
   playerIdToBids: PropTypes.object.isRequired, // { player_id: bid}
   players: PropTypes.array.isRequired,
   trumpCard: PropTypes.object.isRequired, // card: { suit: 'H'.isRequired, value: '4', type: 'Standard'}
-  currTrick: PropTypes.object.isRequired, // {cardsPlayed: {playerId: card}}
-  startTrick: PropTypes.func.isRequired
+  currTrick: PropTypes.object, // {cardsPlayed: {playerId: card}}
+  startTrick: PropTypes.func.isRequired,
+  currRoundState: PropTypes.string.isRequired, // 'bid' || 'play'
+  activePlayerId: PropTypes.string.isRequired
 };

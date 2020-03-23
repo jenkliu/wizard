@@ -18,6 +18,15 @@ body {
   border: 1px solid #000;
   margin: 16px;
   padding: 4px;
+  display: flex;
+}
+.active-player-indicator {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 24px;
+  display: flex;
+  color: #ffa500;
 }
 .player-card.is-winner .card {
   border: 5px solid #008000;

@@ -3,7 +3,6 @@ import { RoomsCollection } from '/imports/api/rooms/rooms';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import WaitingRoomScreen from './WaitingRoomScreen';
-import BidScreen from './BidScreen';
 import GameplayScreen from './GameplayScreen';
 import ScoreboardScreen from './ScoreboardScreen';
 
@@ -55,18 +54,8 @@ class HostRoom extends React.Component {
 		if (room.state === 'waiting') {
 			return <WaitingRoomScreen code={room.code} players={room.players} startGame={this.startGame} />;
 		}
-		// Bid state (state === 'active')
-		if (room.currRound.state === 'bid') {
-			return (
-				<BidScreen
-					playerIdToBids={room.currRound.playerIDsToBids}
-					players={room.players}
-					trumpCard={room.currRound.trumpCard}
-				/>
-			);
-		}
-		// Play state
-		if (room.currRound.state === 'play' && room.currRound.currTrick) {
+		// Active game in bid/play state
+		if (room.state === 'active' && room.currRound.state !== 'finished') {
 			return (
 				<GameplayScreen
 					playerIdToBids={room.currRound.playerIDsToBids}
@@ -74,6 +63,8 @@ class HostRoom extends React.Component {
 					trumpCard={room.currRound.trumpCard}
 					currTrick={room.currRound.currTrick}
 					startTrick={this.startTrick}
+					currRoundState={room.currRound.state}
+					activePlayerId={room.currRound.activePlayerID}
 				/>
 			);
 		}
