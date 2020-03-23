@@ -41,16 +41,16 @@ export default class GameplayScreen extends React.Component {
     const numTricksMet = numTricksWon >= numTricksBid ? numTricksBid : numTricksWon;
     const numTricksLeft = numTricksBid - numTricksWon;
     for (let i = 0; i < numTricksMet; i++) {
-      tricksDisplay.push(<span className="trick met" />);
+      tricksDisplay.push(<span key={`met-${i}`} className="trick met" />);
     }
     if (numTricksLeft > 0) {
       for (let i = 0; i < numTricksLeft; i++) {
-        tricksDisplay.push(<span className="trick incomplete" />);
+        tricksDisplay.push(<span key={`incomplete-${i}`} className="trick incomplete" />);
       }
     }
     if (numTricksLeft < 0) {
       for (let i = 0; i < Math.abs(numTricksLeft); i++) {
-        tricksDisplay.push(<span className="trick extra" />);
+        tricksDisplay.push(<span key={`extra-${i}`} className="trick extra" />);
       }
     }
     return <div className="tricks">{tricksDisplay}</div>;

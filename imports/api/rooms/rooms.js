@@ -116,7 +116,9 @@ Meteor.methods({
       code: code,
       createdAt: new Date(),
       players: [],
-      numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      // numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      numTricksArr: [10],
+
       rounds: [],
       currRound: null
     });
@@ -260,8 +262,8 @@ Meteor.methods({
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
     for ([playerID, bid] of Object.entries(room.currRound.playerIDsToBids)) {
-      if ( bid == null ) {
-        throw new Meteor.Error('everyone needs to bid before you begin play')
+      if (bid == null) {
+        throw new Meteor.Error('everyone needs to bid before you begin play');
       }
     }
 
@@ -369,7 +371,7 @@ Meteor.methods({
       $set: { currRound: currRound }
     });
     return {
-      isLastTrick: currRound.numTricks == (currRound.tricks.length + 1),
+      isLastTrick: currRound.numTricks == currRound.tricks.length + 1,
       winningPlayerID: currRound.currTrick.winningPlayerID
     };
   },
@@ -388,7 +390,7 @@ Meteor.methods({
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
-    return {isLastRound: room.numTricksArr.length == (room.rounds.length + 1)};
+    return { isLastRound: room.numTricksArr.length == room.rounds.length + 1 };
   },
   'rooms.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
