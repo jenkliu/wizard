@@ -91,7 +91,7 @@ export default class PlayerHandScreen extends React.Component {
 	}
 
 	renderCta() {
-		if (!this.isMyTurn()) return;
+		if (!this.isMyTurn() || this.props.cards.length === 0) return null;
 		if (this.props.currRoundState === 'bid') {
 			return this.renderBidInput();
 		} else {
