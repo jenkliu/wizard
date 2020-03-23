@@ -410,6 +410,11 @@ if (Meteor.isServer) {
         assert.equal(playCardCallback[player2ID].type, jesterCard.type);
         assert.equal(playCardCallback[player1ID].type, wizardCard.type);
 
+        // ensure that cards were removed
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.playerIDsToCards[player1ID].length, 0);
+        assert.equal(room.currRound.playerIDsToCards[player2ID].length, 0);
+
         finishTrickCallback = Meteor.call('rooms.tricks.finish', roomID);
         assert.equal(finishTrickCallback.isLastTrick, true);
         assert.equal(finishTrickCallback.winningPlayerID, player1ID);
@@ -420,7 +425,15 @@ if (Meteor.isServer) {
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
         console.log(room);
 
-        // todo: test scoreboard
+        scores = Meteor.call('rooms.rounds.getCurrRoundPlayerIDsToScores', roomID);
+        assert.equal(scores[player1ID], 30);
+        assert.equal(scores[player2ID], -10);
+
+        scores = Meteor.call('rooms.rounds.getPlayerIDsToScores', roomID);
+        assert.equal(scores[player1ID], 30);
+        assert.equal(scores[player2ID], -10);
+
+        // todo: round 2
       });
     });
   });

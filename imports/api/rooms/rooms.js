@@ -246,13 +246,15 @@ Meteor.methods({
   },
   'rooms.rounds.getPlayerIDsToScores'(roomID) {
     // get total scores from all historical rounds
-    // todo: test this, lol
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     scores = room.rounds.map(function(round) {
       getPlayerIDsToScores(round);
     });
 
-    playerIDs = Object.keys(round.playerIDsToBids);
+    console.log('testing getPlayerIDsToScores');
+    console.log(scores);
+
+    playerIDs = Object.keys(room.currRound.playerIDsToBids);
     playerIDsToScores = getPlayerIDsToScores(room.currRound);
     return scores.reduce(function(playerIDsToScores, roundScores) {
       for (i = 0; i < playerIDs.length; i++) {
