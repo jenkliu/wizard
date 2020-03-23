@@ -16,11 +16,18 @@ class HostRoom extends React.Component {
 		};
 	}
 
+	// this is legacy
+	// TODO consider using getDerivedStateFromProps or componentDidUpdate instead
+	// https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops
 	componentWillReceiveProps(props) {
 		if (props.room.currRound && props.room.currRound.state === 'finished') {
 			this.fetchScores();
 		}
 	}
+
+	startTrick = () => {
+		Meteor.call('rooms.tricks.start', this.props.room._id);
+	};
 
 	startRound = () => {
 		Meteor.call('rooms.rounds.start', this.props.room._id);
@@ -66,6 +73,7 @@ class HostRoom extends React.Component {
 					players={room.players}
 					trumpCard={room.currRound.trumpCard}
 					currTrick={room.currRound.currTrick}
+					startTrick={this.startTrick}
 				/>
 			);
 		}

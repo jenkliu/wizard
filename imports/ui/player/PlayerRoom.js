@@ -44,13 +44,13 @@ class PlayerRoom extends React.Component {
 
 			if (numCards === this.props.room.players.length) {
 				Meteor.call('rooms.tricks.finish', this.props.room._id, (error, data) => {
-					// todo check who won the trick and display somehow (on the host side..?)
 					if (data.isLastTrick) {
-						Meteor.call('rooms.rounds.finish', this.props.room._id, (error, data) => {
-							// TODO: add callback: if data. isLastRound, then finish room
-						});
-					} else {
-						Meteor.call('rooms.tricks.start', this.props.room._id);
+						// show who won the last trick before moving on
+						setTimeout(() => {
+							Meteor.call('rooms.rounds.finish', this.props.room._id, (error, data) => {
+								// TODO: add callback: if data. isLastRound, then finish room
+							});
+						}, 2000);
 					}
 				});
 			}
