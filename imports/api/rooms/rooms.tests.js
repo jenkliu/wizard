@@ -223,7 +223,7 @@ if (Meteor.isServer) {
         roomID = Meteor.call('rooms.create');
         assert.equal(RoomsCollection.find().fetch().length, 1)
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-        assert.equal(room.gameState, 'waiting');
+        assert.equal(room.state, 'waiting');
         assert.equal(room.rounds.length, 0);
         assert.equal(room.currRound, null);
       });
@@ -276,11 +276,11 @@ if (Meteor.isServer) {
       it('starting properly changes room state', () => {
         roomID = Meteor.call('rooms.create');
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-        assert.equal(room.gameState, 'waiting');
+        assert.equal(room.state, 'waiting');
 
         Meteor.call('rooms.start', roomID);
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-        assert.equal(room.gameState, 'active');
+        assert.equal(room.state, 'active');
       });
 
       // todo: require 2 people to start a room
@@ -488,7 +488,7 @@ if (Meteor.isServer) {
 
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
         assert.equal(room.currRound, null);
-        assert.equal(room.gameState, 'finished');
+        assert.equal(room.state, 'finished');
       });
     });
   });
