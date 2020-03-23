@@ -248,11 +248,8 @@ Meteor.methods({
     // get total scores from all historical rounds
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     scores = room.rounds.map(function(round) {
-      getPlayerIDsToScores(round);
+      return getPlayerIDsToScores(round);
     });
-
-    console.log('testing getPlayerIDsToScores');
-    console.log(scores);
 
     playerIDs = Object.keys(room.currRound.playerIDsToBids);
     playerIDsToScores = getPlayerIDsToScores(room.currRound);
@@ -379,7 +376,7 @@ Meteor.methods({
       $set: {
         rounds: rounds,
         currRound: null,
-        state: 'finished'
+        gameState: 'finished'
       }
     });
   }
