@@ -107,7 +107,7 @@ Meteor.methods({
   'rooms.create'() {
     return RoomsCollection.insert({
       state: 'waiting',
-      code: 'BALLS', // todo: make the code random, lol
+      code: Math.random().toString(36).substr(2, 5).toUpperCase(),
       createdAt: new Date(),
       players: [],
       numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
