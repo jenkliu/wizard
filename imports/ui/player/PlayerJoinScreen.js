@@ -21,7 +21,7 @@ export default class PlayerJoinScreen extends React.Component {
 
 	// TODO create real browserKey for 2nd param
 	handleClickPlay = () => {
-		this.props.joinGame(this.state.name, '283749328', this.state.gameCode);
+		this.props.joinGame(this.state.name, this.state.name, this.state.gameCode);
 	};
 
 	render() {
