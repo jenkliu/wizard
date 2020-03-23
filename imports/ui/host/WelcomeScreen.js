@@ -13,7 +13,9 @@ export default class WelcomeScreen extends React.Component {
 					width="200px"
 				/>
 				<p>
-					<button onClick={this.props.createRoom}>Create a room</button>
+					<button className="btn" onClick={this.props.createRoom}>
+						Create a room
+					</button>
 				</p>
 			</div>
 		);
