@@ -145,7 +145,10 @@ Meteor.methods({
     });
   },
   'rooms.start'(roomID) {
-    // todo: can only do this when the state is waiting
+    if (room.state != 'waiting') {
+      throw new Meteor.Error('you are trying to start a non-waiting room');
+    }
+
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     RoomsCollection.update(roomID, {
       $set: { state: 'active', players: shuffle(room.players) }
@@ -249,6 +252,13 @@ Meteor.methods({
   'rooms.rounds.beginPlay'(roomID) {
     // todo: throw error if the bids aren't in yet
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+    for ([playerID, bid] of Object.entries(room.currRound.playerIDsToBids)) {
+      if ( bid == null ) {
+        throw new Meteor.Error('everyone needs to bid before you begin play')
+      }
+    }
+
     currRound = room.currRound;
     currRound.state = 'play';
     RoomsCollection.update(roomID, {
