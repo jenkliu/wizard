@@ -2,6 +2,8 @@ body
 	padding 10px
 	font-family sans-serif
 
+////////////////////// HOST
+
 .player-bid
 	display flex
 	width 25%
@@ -20,6 +22,9 @@ body
 	margin 16px
 	padding 4px
 	
+.card
+	.player-card.is-winner &
+			border 5px solid green		
 
 	////////////////////// PLAYER
 		
@@ -41,6 +46,7 @@ body
 	
 .clickable-card
 	&.is-active
-		border 3px solid orange
+		.card
+			border 3px solid orange
 	&:hover
 		cursor pointer

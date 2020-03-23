@@ -19,6 +19,9 @@ body {
   margin: 16px;
   padding: 4px;
 }
+.player-card.is-winner .card {
+  border: 5px solid #008000;
+}
 .player-hand {
   display: flex;
 }
@@ -34,7 +37,7 @@ body {
 .btn:disabled {
   background-color: #808080;
 }
-.clickable-card.is-active {
+.clickable-card.is-active .card {
   border: 3px solid #ffa500;
 }
 .clickable-card:hover {
