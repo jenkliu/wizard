@@ -1,0 +1,64 @@
+import React from 'react';
+import { RoomsCollection } from '/imports/api/rooms/rooms';
+import { withTracker } from 'meteor/react-meteor-data';
+
+import WaitingRoomScreen from './WaitingRoomScreen';
+import BidScreen from './BidScreen';
+import GameplayScreen from './GameplayScreen';
+import ScoreboardScreen from './ScoreboardScreen';
+
+class HostRoom extends React.Component {
+	startRound = () => {
+		Meteor.call('rooms.rounds.start', this.props.room._id);
+		Meteor.call('rooms.rounds.deal', this.props.room._id);
+	};
+
+	startGame = () => {
+		Meteor.call('rooms.start', this.props.room._id);
+		this.startRound();
+	};
+
+	render() {
+		const { room } = this.props;
+		// Waiting room
+		if (room.state === 'waiting') {
+			return <WaitingRoomScreen code={room.code} players={room.players} startGame={this.startGame} />;
+		}
+		// Bid state (state === 'active')
+		if (room.currRound.state === 'bid') {
+			return (
+				<BidScreen
+					playerIdToBids={room.currRound.playerIDsToBids}
+					players={room.players}
+					trumpCard={room.currRound.trumpCard}
+				/>
+			);
+		}
+		// Play state
+		if (room.currRound.state === 'play') {
+			return (
+				<GameplayScreen
+					playerIdToBids={room.currRound.playerIDsToBids}
+					players={room.players}
+					trumpCard={room.currRound.trumpCard}
+					currTrick={room.currRound.currTrick}
+				/>
+			);
+		}
+		// Score state
+		if (room.currRound.state === 'finished') {
+			return <ScoreboardScreen roomId={room._id} players={room.players} startNextRound={this.startRound} />;
+		}
+
+		// TODO return loading indicator otherwise
+		return null;
+	}
+}
+
+export default withTracker(({ roomId }) => {
+	Meteor.subscribe('rooms');
+	const room = RoomsCollection.findOne({ _id: roomId });
+	return {
+		room
+	};
+})(HostRoom);

@@ -67,7 +67,7 @@ class PlayerRoom extends React.Component {
 			return <div>Round complete!</div>;
 		}
 
-		if (this.props.room.gameState === 'active' && this.hasInitializedHand()) {
+		if (this.props.room.state === 'active' && this.hasInitializedHand()) {
 			return (
 				<PlayerHandScreen
 					cards={this.props.room.currRound.playerIDsToCards[this.props.myPlayer._id]}
