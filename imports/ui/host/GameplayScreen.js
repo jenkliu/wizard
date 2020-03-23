@@ -4,16 +4,56 @@ import Card from '../Card';
 import classNames from 'classnames';
 
 export default class GameplayScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // assume we initialize this component every new round
+    const playerIdToTricks = {};
+    props.players.forEach(player => {
+      playerIdToTricks[player._id] = 0;
+    });
+
+    this.state = {
+      playerIdToTricks
+    };
+  }
   componentDidUpdate(prevProps, prevState, snapshot) {
     // someone just won the trick, show who won then start the next trick
     if (
       !(prevProps.currTrick && prevProps.currTrick.winningPlayerID) &&
       (this.props.currTrick && this.props.currTrick.winningPlayerID)
     ) {
+      const winningPlayerID = this.props.currTrick.winningPlayerID;
+      const newPlayerIdToTricks = { ...this.state.playerIdToTricks };
+      newPlayerIdToTricks[winningPlayerID] = this.state.playerIdToTricks[winningPlayerID] + 1;
+      this.setState({ playerIdToTricks: newPlayerIdToTricks });
+
       setTimeout(() => {
         this.props.startTrick();
       }, 2000);
     }
+  }
+
+  renderTricks(player) {
+    let tricksDisplay = [];
+    const numTricksWon = this.state.playerIdToTricks[player._id];
+    const numTricksBid = this.props.playerIdToBids[player._id];
+    const numTricksMet = numTricksWon >= numTricksBid ? numTricksBid : numTricksWon;
+    const numTricksLeft = numTricksBid - numTricksWon;
+    for (let i = 0; i < numTricksMet; i++) {
+      tricksDisplay.push(<span className="trick met" />);
+    }
+    if (numTricksLeft > 0) {
+      for (let i = 0; i < numTricksLeft; i++) {
+        tricksDisplay.push(<span className="trick incomplete" />);
+      }
+    }
+    if (numTricksLeft < 0) {
+      for (let i = 0; i < Math.abs(numTricksLeft); i++) {
+        tricksDisplay.push(<span className="trick extra" />);
+      }
+    }
+    return <div className="tricks">{tricksDisplay}</div>;
   }
 
   renderPlayer(player) {
@@ -38,6 +78,7 @@ export default class GameplayScreen extends React.Component {
         <div className="bid">
           Bid: {this.props.playerIdToBids[player._id] != null ? this.props.playerIdToBids[player._id] : '?'}
         </div>
+        {this.renderTricks(player)}
       </div>
     );
   }

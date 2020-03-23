@@ -31,6 +31,20 @@ body {
 .player-card.is-winner .card {
   border: 5px solid #008000;
 }
+.trick {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  border: 1px solid #000;
+  margin-right: 5px;
+}
+.trick.met {
+  background-color: #000;
+}
+.trick.extra {
+  background-color: #f00;
+}
 .player-hand {
   display: flex;
 }

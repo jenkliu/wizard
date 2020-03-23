@@ -37,6 +37,21 @@ body
 	.player-card.is-winner &
 			border 5px solid green		
 
+trick_display_size = 20px
+.trick
+	display inline-flex
+	width trick_display_size
+	height trick_display_size
+	border-radius trick_display_size
+	border 1px solid black
+	margin-right 5px
+
+	&.met
+		background-color black
+	
+	&.extra
+		background-color red
+
 	////////////////////// PLAYER
 		
 
