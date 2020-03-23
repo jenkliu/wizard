@@ -34,26 +34,30 @@ class PlayerRoom extends React.Component {
 	};
 
 	playCard = (playerId, card) => {
-		Meteor.call('rooms.tricks.playCard', this.props.room._id, playerId, card, (error, playerIdsToCards) => {
-			if (error) console.error(error);
-			// If all cards are in, finish trick
-			let numCards = 0;
-			Object.values(playerIdsToCards).forEach(card => {
-				if (card !== null) numCards++;
-			});
+		return new Promise((resolve, reject) => {
+			Meteor.call('rooms.tricks.playCard', this.props.room._id, playerId, card, (error, playerIdsToCards) => {
+				if (error) reject(error);
 
-			if (numCards === this.props.room.players.length) {
-				Meteor.call('rooms.tricks.finish', this.props.room._id, (error, data) => {
-					if (data.isLastTrick) {
-						// show who won the last trick before moving on
-						setTimeout(() => {
-							Meteor.call('rooms.rounds.finish', this.props.room._id, (error, data) => {
-								// TODO: add callback: if data. isLastRound, then finish room
-							});
-						}, 2000);
-					}
+				// If all cards are in, finish trick
+				let numCards = 0;
+				Object.values(playerIdsToCards).forEach(card => {
+					if (card !== null) numCards++;
 				});
-			}
+
+				if (numCards === this.props.room.players.length) {
+					Meteor.call('rooms.tricks.finish', this.props.room._id, (error, data) => {
+						if (data.isLastTrick) {
+							// show who won the last trick before moving on
+							setTimeout(() => {
+								Meteor.call('rooms.rounds.finish', this.props.room._id, (error, data) => {
+									// TODO: add callback: if data. isLastRound, then finish room
+								});
+							}, 2000);
+						}
+					});
+				}
+				resolve(true);
+			});
 		});
 	};
 

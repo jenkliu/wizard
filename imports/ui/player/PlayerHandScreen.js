@@ -47,11 +47,14 @@ export default class PlayerHandScreen extends React.Component {
 		console.log('clicked play card');
 		const cardPlayedId = this.state.activeCardId;
 		const card = this.state.cardIdsToCards[cardPlayedId];
-		this.props.playCard(this.props.myPlayer._id, card);
-		// TODO animate this
-		const newCardIdsToCards = this.state.cardIdsToCards;
-		delete newCardIdsToCards[cardPlayedId];
-		this.setState({ cardIdsToCards: newCardIdsToCards });
+		this.props
+			.playCard(this.props.myPlayer._id, card)
+			.then(didSucceed => {
+				const newCardIdsToCards = this.state.cardIdsToCards;
+				delete newCardIdsToCards[cardPlayedId];
+				this.setState({ cardIdsToCards: newCardIdsToCards });
+			})
+			.catch(err => alert(err));
 	};
 
 	// TODO make these fan out/scrollable in a carousel
