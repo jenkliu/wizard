@@ -342,7 +342,10 @@ Meteor.methods({
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
-    return {isLastTrick: currRound.numTricks == (currRound.tricks.length + 1)};
+    return {
+      isLastTrick: currRound.numTricks == (currRound.tricks.length + 1),
+      winningPlayerID: currRound.currTrick.winningPlayerID
+    };
   },
   'rooms.rounds.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
