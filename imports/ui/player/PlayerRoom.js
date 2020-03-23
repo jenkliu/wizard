@@ -17,10 +17,12 @@ class PlayerRoom extends React.Component {
 		super(props);
 	}
 
+	// TODO:
+	//  add callback: if num bids returned == players in room, then call 2.1 functions
 	submitBid = (playerId, bid) => {
 		Meteor.call('rooms.rounds.updateBid', this.props.room._id, playerId, bid);
 	};
-
+	// TODO: add callback: if num cards played == num players in room, then call 3.1
 	playCard = (playerId, card) => {
 		Meteor.call('rooms.tricks.playCard', this.props.room._id, playerId, card);
 	};
