@@ -233,7 +233,7 @@ Meteor.methods({
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
-    console.log('Bid updated', room);
+    return currRound.playerIDsToBids;
   },
   'rooms.rounds.beginPlay'(roomID) {
     // todo: throw error if the bids aren't in yet
