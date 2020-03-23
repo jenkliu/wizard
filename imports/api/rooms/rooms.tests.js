@@ -212,7 +212,6 @@ if (Meteor.isServer) {
     });
 
     describe('lobby stuff', () => {
-      const userId = Random.id();
       let roomID;
 
       beforeEach(() => {
@@ -285,6 +284,90 @@ if (Meteor.isServer) {
       });
 
       // todo: require 2 people to start a room
+    });
+
+    describe('dealing cards', () => {
+      let roomID;
+
+      beforeEach(() => {
+        RoomsCollection.remove({});
+        PlayersCollection.remove({});
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        Meteor.call('rooms.addPlayer', player1_id);
+        Meteor.call('rooms.addPlayer', player2_id);
+        Meteor.call('rooms.start', roomID);
+      });
+
+      it('ensure everyone gets the right number of cards', () => {
+        // todo
+      });
+    });
+
+    describe('bidding', () => {
+      let roomID;
+
+      beforeEach(() => {
+        RoomsCollection.remove({});
+        PlayersCollection.remove({});
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        Meteor.call('rooms.addPlayer', player1_id);
+        Meteor.call('rooms.addPlayer', player2_id);
+        Meteor.call('rooms.start', roomID);
+      });
+
+      it('let everyone bid', () => {
+        // todo: ensure that the return signature of updateBid works
+      });
+
+      it('yell at people who bid out of turn', () => {
+        // todo
+      });
+    });
+
+    describe('playing tricks', () => {
+      let roomID;
+
+      beforeEach(() => {
+        RoomsCollection.remove({});
+        PlayersCollection.remove({});
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        Meteor.call('rooms.addPlayer', player1_id);
+        Meteor.call('rooms.addPlayer', player2_id);
+        Meteor.call('rooms.start', roomID);
+      });
+
+      it('yell at people who play out of turn', () => {
+        // todo
+      });
+    });
+
+    describe('playing a round', () => {
+      let roomID;
+
+      beforeEach(() => {
+        RoomsCollection.remove({});
+        PlayersCollection.remove({});
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        Meteor.call('rooms.addPlayer', player1_id);
+        Meteor.call('rooms.addPlayer', player2_id);
+        Meteor.call('rooms.start', roomID);
+      });
+
+      it('play a round', () => {
+        // todo: make numTricks just like [1, 2] or something
+      });
     });
   });
 }
