@@ -373,6 +373,7 @@ if (Meteor.isServer) {
         // todo: make numTricks just like [1, 2] or something
         // todo: ensure that rooms.tricks.finish properly returns isLastTrick
         // todo: ensure that rooms.rounds.finish properly returns isLastRound
+        // todo: test scoreboard
       });
     });
   });

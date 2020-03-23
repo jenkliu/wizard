@@ -253,10 +253,7 @@ Meteor.methods({
     });
 
     playerIDs = Object.keys(round.playerIDsToBids);
-    playerIDsToScores = {};
-    for (i = 0; i < playerIDs.length; i++) {
-      playerIDsToScores[playerIDs[i]] = 0;
-    }
+    playerIDsToScores = getPlayerIDsToScores(room.currRound);
     return scores.reduce(function(playerIDsToScores, roundScores) {
       for (i = 0; i < playerIDs.length; i++) {
         playerIDsToScores[playerIDs[i]] += roundScores[playerIDs[i]];
