@@ -242,16 +242,21 @@ if (Meteor.isServer) {
         assert.equal(PlayersCollection.find().fetch().length, 3)
       });
 
-      it('cannot join an active/non-existant room', () => {
-        roomID = Meteor.call('rooms.create');
-        Meteor.call('rooms.start', roomID);
-        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-
-        assert.equal(
-          Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code),
-          null);
+      it('cannot join a non-existant room', () => {
         assert.equal(
           Meteor.call('players.get_or_create', 'Dean', 'AAA', 'BADCODE'),
+          null);
+      });
+
+      it('cannot join a finished room', () => {
+        roomID = Meteor.call('rooms.create');
+        RoomsCollection.update(roomID, {
+          $set: { state: 'finished' }
+        });
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(
+          Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code),
           null);
       });
 
@@ -271,6 +276,21 @@ if (Meteor.isServer) {
         Meteor.call('rooms.removePlayer', player2_id);
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
         assert.equal(room.players.length, 1);
+      });
+
+      it('cannot add/remove players to/from active rooms', () => {
+        roomID = Meteor.call('rooms.create');
+        Meteor.call('rooms.start', roomID);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        playerID = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+
+        assert.throws(() => {
+          Meteor.call('rooms.addPlayer', playerID);
+        }, Meteor.Error, 'cannot add player to a non-waiting room');
+        assert.throws(() => {
+          Meteor.call('rooms.removePlayer', playerID);
+        }, Meteor.Error, 'cannot remove player from a non-waiting room');
+
       });
 
       it('starting properly changes room state', () => {
