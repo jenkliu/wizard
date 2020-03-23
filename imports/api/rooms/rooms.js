@@ -105,9 +105,15 @@ export function getPlayerIDsToScores(round) {
 
 Meteor.methods({
   'rooms.create'() {
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVXYZ';
+    code = '';
+    for (var i = 0; i < 5; i++) {
+      var rnum = Math.floor(Math.random() * chars.length);
+      code += chars.substring(rnum, rnum + 1);
+    }
     return RoomsCollection.insert({
       state: 'waiting',
-      code: Math.random().toString(36).substr(2, 5).toUpperCase(),
+      code: code,
       createdAt: new Date(),
       players: [],
       numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
