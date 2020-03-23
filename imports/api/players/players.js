@@ -10,7 +10,6 @@ Meteor.methods({
     // fetch most recent room with this code
     room = RoomsCollection.find({ code: roomCode, gameState: 'waiting' }, { sort: { createdAt: -1 } }).fetch()[0];
     if (room == null) {
-      console.log("Couldn't find room");
       return;
     }
 
@@ -26,7 +25,6 @@ Meteor.methods({
 
     // Refresh player object
     player = PlayersCollection.find({ browserKey: browserKey, roomID: room._id }).fetch()[0];
-    console.log('Player: ' + player._id, player);
     return player._id;
   }
 });

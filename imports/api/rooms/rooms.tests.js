@@ -3,6 +3,7 @@ import { Random } from 'meteor/random';
 import { assert } from 'chai';
 
 import { RoomsCollection, getWinningPlayerID, isLegalPlay, getPlayerIDsToScores } from './rooms.js';
+import { PlayersCollection } from '../players/players.js'
 
 if (Meteor.isServer) {
   describe('Rooms', () => {
@@ -210,37 +211,80 @@ if (Meteor.isServer) {
       });
     });
 
-    describe('methods', () => {
+    describe('lobby stuff', () => {
       const userId = Random.id();
       let roomID;
 
       beforeEach(() => {
         RoomsCollection.remove({});
-        roomID = RoomsCollection.insert({
-          'gameState': 'waiting',
-          'code': 'BALLS',
-          'createdAt': new Date(),
-          'players': [],
-          'numTricksArr': [1, 2, 3, 4, 5],
-          'rounds': [],
-          'currRound': null,          
-        });
+        PlayersCollection.remove({});
       });
 
-      it('sample invocation stuff', () => {
-        // Find the internal implementation of the task method so we can
-        // test it in isolation
-        // const deleteTask = Meteor.server.method_handlers['tasks.remove'];
-
-        // Set up a fake method invocation that looks like what the method expects
-        // const invocation = { userId };
-
-        // Run the method with `this` set to the fake invocation
-        // deleteTask.apply(invocation, [taskId]);
-
-        // Verify that the method does what we expected
-        // assert.equal(Tasks.find().count(), 0);
+      it('creating a room', () => {
+        roomID = Meteor.call('rooms.create');
+        assert.equal(RoomsCollection.find().fetch().length, 1)
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.gameState, 'waiting');
+        assert.equal(room.rounds.length, 0);
+        assert.equal(room.currRound, null);
       });
+
+      it('join a waiting room', () => {
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        player3_id = Meteor.call('players.get_or_create', 'Max', 'CCC', room.code);
+
+        assert.equal(
+          Meteor.call('players.get_or_create', 'Newplayer', 'CCC', room.code),
+          player3_id);
+        assert.equal(PlayersCollection.find().fetch().length, 3)
+      });
+
+      it('cannot join an active/non-existant room', () => {
+        roomID = Meteor.call('rooms.create');
+        Meteor.call('rooms.start', roomID);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+        assert.equal(
+          Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code),
+          null);
+        assert.equal(
+          Meteor.call('players.get_or_create', 'Dean', 'AAA', 'BADCODE'),
+          null);
+      });
+
+      it('adding and removing players', () => {
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+
+        Meteor.call('rooms.addPlayer', player1_id);
+        Meteor.call('rooms.addPlayer', player2_id);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.players.length, 2);
+        assert.equal(room.players[0]._id, player1_id);
+        assert.equal(room.players[1]._id, player2_id);
+
+        Meteor.call('rooms.removePlayer', player2_id);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.players.length, 1);
+      });
+
+      it('starting properly changes room state', () => {
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.gameState, 'waiting');
+
+        Meteor.call('rooms.start', roomID);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.gameState, 'active');
+      });
+
+      // todo: require 2 people to start a room
     });
   });
 }
