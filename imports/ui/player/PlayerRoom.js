@@ -21,47 +21,57 @@ class PlayerRoom extends React.Component {
 		Meteor.call('rooms.rounds.updateBid', this.props.room._id, playerId, bid, (error, playerIdsToBids) => {
 			if (error) console.error(error);
 			// If all bids are in, start round
-			console.log('playerIdsToBids', playerIdsToBids);
 			let numBids = 0;
-			Object.values(playerIdsToBids).map(bid => {
+			Object.values(playerIdsToBids).forEach(bid => {
 				if (bid !== null) numBids++;
 			});
 
-			console.log('num bids', numBids);
 			if (numBids == this.props.room.players.length) {
-				console.log('lets begin playing!');
 				Meteor.call('rooms.rounds.beginPlay', this.props.room._id);
 				Meteor.call('rooms.tricks.start', this.props.room._id);
 			}
 		});
 	};
-	// TODO: add callback: if num cards played == num players in room, then call 3.1
+
 	playCard = (playerId, card) => {
-		Meteor.call('rooms.tricks.playCard', this.props.room._id, playerId, card);
+		Meteor.call('rooms.tricks.playCard', this.props.room._id, playerId, card, (error, playerIdsToCards) => {
+			if (error) console.error(error);
+			// If all cards are in, finish trick
+			let numCards = 0;
+			Object.values(playerIdsToCards).forEach(card => {
+				if (card !== null) numCards++;
+			});
+
+			if (numCards === this.props.room.players.length) {
+				Meteor.call('rooms.tricks.finish', this.props.room._id, (error, data) => {
+					// todo check who won the trick and display somehow (on the host side..?)
+					if (data.isLastTrick) {
+						Meteor.call('rooms.rounds.finish', this.props.room._id, (error, data) => {
+							// TODO: add callback: if data. isLastRound, then finish room
+						});
+					} else {
+						Meteor.call('rooms.tricks.start', this.props.room._id);
+					}
+				});
+			}
+		});
 	};
 
 	hasInitializedHand() {
-		return this.props.room.currRound && this.props.room.currRound.playerIDsToCards;
+		const { room } = this.props;
+		return room.currRound && Object.keys(room.currRound.playerIDsToCards).length > 0;
 	}
 
 	render() {
-		if (this.props.room.gameState === 'active' && this.hasInitializedHand()) {
+		if (this.props.room.currRound && this.props.room.currRound.state === 'finished') {
+			return <div>Round complete!</div>;
+		}
+
+		if (this.props.room.state === 'active' && this.hasInitializedHand()) {
 			return (
 				<PlayerHandScreen
-					// cards={[
-					// 	{ suit: 'C', value: 10, type: 'Standard' },
-					// 	{ suit: 'C', value: 3, type: 'Standard' },
-					// 	{ suit: 'H', value: 9, type: 'Standard' },
-					// 	{ suit: 'H', value: 13, type: 'Standard' },
-					// 	{ suit: 'S', value: 14, type: 'Standard' },
-					// 	{ suit: 'D', value: 10, type: 'Standard' },
-					// 	{ suit: null, value: null, type: 'Jester' },
-					// 	{ suit: null, value: null, type: 'Wizard' }
-					// ]}
 					cards={this.props.room.currRound.playerIDsToCards[this.props.myPlayer._id]}
 					currRoundState={this.props.room.currRound.state}
-					// myPlayer={{ _id: 1, name: 'Jen' }}
-					// activePlayer={{ _id: 1, name: 'Jen' }}
 					myPlayer={this.props.myPlayer}
 					activePlayer={getPlayerById(this.props.room.currRound.activePlayerID)}
 					submitBid={this.submitBid}

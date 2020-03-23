@@ -5,23 +5,15 @@ import ClickableCard from '../ClickableCard';
 export default class PlayerHandScreen extends React.Component {
 	constructor(props) {
 		super(props);
-		let cardsWithIds = [];
 		let cardIdsToCards = {};
+		props.cards.forEach((card, i) => {
+			cardIdsToCards[i] = { id: i, ...card };
+		});
 
-		if (props.cards) {
-			cardsWithIds = props.cards.map((card, i) => {
-				return { id: i, ...card };
-			});
-			cardIdsToCards = {};
-			props.cards.forEach((card, i) => {
-				cardIdsToCards[i] = card;
-			});
-		}
 		this.state = {
 			bid: 0,
 			activeCardId: null,
-			cardIdsToCards,
-			cardsWithIds
+			cardIdsToCards
 		};
 	}
 
@@ -52,19 +44,25 @@ export default class PlayerHandScreen extends React.Component {
 	};
 
 	handleClickPlayCard = () => {
-		const card = this.state.cardIdsToCards[this.state.activeCardId];
+		console.log('clicked play card');
+		const cardPlayedId = this.state.activeCardId;
+		const card = this.state.cardIdsToCards[cardPlayedId];
 		this.props.playCard(this.props.myPlayer._id, card);
+		// TODO animate this
+		const newCardIdsToCards = this.state.cardIdsToCards;
+		delete newCardIdsToCards[cardPlayedId];
+		this.setState({ cardIdsToCards: newCardIdsToCards });
 	};
 
 	// TODO make these fan out/scrollable in a carousel
-	// allow selection while it's my turn
-	renderClickableCard(cardWithId) {
-		const card = cardWithId;
+	// TODO disable selection when it's not my turn
+	renderClickableCard(cardId) {
+		const card = this.state.cardIdsToCards[cardId];
 		return (
 			<ClickableCard
-				isActive={card.id === this.state.activeCardId}
-				onClick={this.handleClickCard.bind(this, card.id)}
-				key={card.id}
+				isActive={cardId === this.state.activeCardId}
+				onClick={this.handleClickCard.bind(this, cardId)}
+				key={cardId}
 				suit={card.suit}
 				value={card.value}
 				type={card.type}
@@ -107,7 +105,9 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<div>
 				<div className="status">{this.renderStatus()}</div>
-				<div className="player-hand">{this.state.cardsWithIds.map(card => this.renderClickableCard(card))}</div>
+				<div className="player-hand">
+					{Object.keys(this.state.cardIdsToCards).map(cardId => this.renderClickableCard(cardId))}
+				</div>
 				{this.isMyTurn() ? this.renderCta() : null}
 			</div>
 		);
@@ -116,9 +116,9 @@ export default class PlayerHandScreen extends React.Component {
 
 PlayerHandScreen.propTypes = {
 	myPlayer: PropTypes.object,
-	cards: PropTypes.array,
+	cards: PropTypes.array.isRequired,
 	activePlayer: PropTypes.object,
-	currRoundState: PropTypes.string, // 'bid' | 'play'
+	currRoundState: PropTypes.string, // 'bid' | 'play' | 'finished'
 	submitBid: PropTypes.func,
 	playCard: PropTypes.func
 };
