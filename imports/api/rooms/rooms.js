@@ -107,10 +107,10 @@ Meteor.methods({
   'rooms.create'() {
     return RoomsCollection.insert({
       state: 'waiting',
-      code: 'BALLS', // todo: make the code random, lol
+      code: Math.random().toString(36).substr(2, 5).toUpperCase(),
       createdAt: new Date(),
       players: [],
-      numTricksArr: [1, 2, 3, 4, 5],
+      numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       rounds: [],
       currRound: null
     });
@@ -118,6 +118,11 @@ Meteor.methods({
   'rooms.addPlayer'(playerID) {
     player = PlayersCollection.find({ _id: playerID }).fetch()[0];
     room = RoomsCollection.find({ _id: player.roomID }).fetch()[0];
+
+    if (room.state != 'waiting') {
+      throw new Meteor.Error('cannot add player to a non-waiting room');
+    }
+
     players = room.players;
     players.push(player);
     RoomsCollection.update(room._id, {
@@ -127,6 +132,11 @@ Meteor.methods({
   'rooms.removePlayer'(playerID) {
     player = PlayersCollection.find({ _id: playerID }).fetch()[0];
     room = RoomsCollection.find({ _id: player.roomID }).fetch()[0];
+
+    if (room.state != 'waiting') {
+      throw new Meteor.Error('cannot remove player from a non-waiting room');
+    }
+
     players = room.players.filter(function(player) {
       return player._id != playerID;
     });
@@ -135,6 +145,7 @@ Meteor.methods({
     });
   },
   'rooms.start'(roomID) {
+    // todo: can only do this when the state is waiting
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     RoomsCollection.update(roomID, {
       $set: { state: 'active', players: shuffle(room.players) }
