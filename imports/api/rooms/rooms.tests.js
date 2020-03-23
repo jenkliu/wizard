@@ -370,9 +370,70 @@ if (Meteor.isServer) {
       });
 
       it('play a round', () => {
-        // todo: make numTricks just like [1, 2] or something
-        // todo: ensure that rooms.tricks.finish properly returns isLastTrick
-        // todo: ensure that rooms.rounds.finish properly returns isLastRound
+        wizardCard = {'suit': null, 'value': null, type: 'Wizard'};
+        jesterCard = {'suit': null, 'value': null, type: 'Jester'};
+
+        RoomsCollection.update(roomID, {
+          $set: { numTricksArr: [1, 2] }
+        });
+        Meteor.call('rooms.rounds.start', roomID);
+        Meteor.call('rooms.rounds.deal', roomID);
+
+        player1ID = room.players[0]._id
+        player2ID = room.players[1]._id
+
+        // override player cards
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        currRound = room.currRound
+        currRound.playerIDsToCards[player1ID] = [ wizardCard ];
+        currRound.playerIDsToCards[player2ID] = [ jesterCard ];
+        RoomsCollection.update(roomID, {
+          $set: { currRound: currRound }
+        });
+
+        bids = Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+        assert.equal(bids[player1ID], null);
+        assert.equal(bids[player2ID], 1);
+
+        bids = Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
+        assert.equal(bids[player1ID], 1);
+        assert.equal(bids[player2ID], 1);
+
+        Meteor.call('rooms.rounds.beginPlay', roomID);
+        Meteor.call('rooms.tricks.start', roomID);
+
+        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard);
+        assert.equal(Object.keys(playCardCallback).length, 1);
+        assert.equal(playCardCallback[player2ID].type, jesterCard.type);
+        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard);
+        assert.equal(Object.keys(playCardCallback).length, 2);
+        assert.equal(playCardCallback[player2ID].type, jesterCard.type);
+        assert.equal(playCardCallback[player1ID].type, wizardCard.type);
+
+        // ensure that cards were removed
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.playerIDsToCards[player1ID].length, 0);
+        assert.equal(room.currRound.playerIDsToCards[player2ID].length, 0);
+
+        finishTrickCallback = Meteor.call('rooms.tricks.finish', roomID);
+        assert.equal(finishTrickCallback.isLastTrick, true);
+        assert.equal(finishTrickCallback.winningPlayerID, player1ID);
+
+        finishRoundCallback = Meteor.call('rooms.rounds.finish', roomID);
+        assert.equal(finishRoundCallback.isLastRound, false);
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        console.log(room);
+
+        scores = Meteor.call('rooms.rounds.getCurrRoundPlayerIDsToScores', roomID);
+        assert.equal(scores[player1ID], 30);
+        assert.equal(scores[player2ID], -10);
+
+        scores = Meteor.call('rooms.rounds.getPlayerIDsToScores', roomID);
+        assert.equal(scores[player1ID], 30);
+        assert.equal(scores[player2ID], -10);
+
+        // todo: round 2
       });
     });
   });

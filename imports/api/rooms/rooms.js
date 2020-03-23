@@ -246,17 +246,16 @@ Meteor.methods({
   },
   'rooms.rounds.getPlayerIDsToScores'(roomID) {
     // get total scores from all historical rounds
-    // todo: test this, lol
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     scores = room.rounds.map(function(round) {
       getPlayerIDsToScores(round);
     });
 
-    playerIDs = Object.keys(round.playerIDsToBids);
-    playerIDsToScores = {};
-    for (i = 0; i < playerIDs.length; i++) {
-      playerIDsToScores[playerIDs[i]] = 0;
-    }
+    console.log('testing getPlayerIDsToScores');
+    console.log(scores);
+
+    playerIDs = Object.keys(room.currRound.playerIDsToBids);
+    playerIDsToScores = getPlayerIDsToScores(room.currRound);
     return scores.reduce(function(playerIDsToScores, roundScores) {
       for (i = 0; i < playerIDs.length; i++) {
         playerIDsToScores[playerIDs[i]] += roundScores[playerIDs[i]];
@@ -345,7 +344,10 @@ Meteor.methods({
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
-    return {isLastTrick: currRound.numTricks == (currRound.tricks.length + 1)};
+    return {
+      isLastTrick: currRound.numTricks == (currRound.tricks.length + 1),
+      winningPlayerID: currRound.currTrick.winningPlayerID
+    };
   },
   'rooms.rounds.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
