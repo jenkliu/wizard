@@ -8,6 +8,20 @@ import GameplayScreen from './GameplayScreen';
 import ScoreboardScreen from './ScoreboardScreen';
 
 class HostRoom extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			currRoundScores: null,
+			totalScores: null
+		};
+	}
+
+	componentWillReceiveProps(props) {
+		if (props.room.currRound && props.room.currRound.state === 'finished') {
+			this.fetchScores();
+		}
+	}
+
 	startRound = () => {
 		Meteor.call('rooms.rounds.start', this.props.room._id);
 		Meteor.call('rooms.rounds.deal', this.props.room._id);
@@ -16,6 +30,18 @@ class HostRoom extends React.Component {
 	startGame = () => {
 		Meteor.call('rooms.start', this.props.room._id);
 		this.startRound();
+	};
+
+	fetchScores = () => {
+		Meteor.call('rooms.rounds.getCurrRoundPlayerIDsToScores', this.props.room._id, (error, currRoundScores) => {
+			if (error) console.error(error);
+			console.log('CURR ROUND SCORES', currRoundScores);
+			Meteor.call('rooms.rounds.getPlayerIDsToScores', this.props.room._id, (error, totalScores) => {
+				if (error) console.error(error);
+				console.log('TOTAL ROUND SCORES', totalScores);
+				this.setState({ currRoundScores, totalScores });
+			});
+		});
 	};
 
 	render() {
@@ -35,7 +61,7 @@ class HostRoom extends React.Component {
 			);
 		}
 		// Play state
-		if (room.currRound.state === 'play') {
+		if (room.currRound.state === 'play' && room.currRound.currTrick) {
 			return (
 				<GameplayScreen
 					playerIdToBids={room.currRound.playerIDsToBids}
@@ -46,8 +72,16 @@ class HostRoom extends React.Component {
 			);
 		}
 		// Score state
-		if (room.currRound.state === 'finished') {
-			return <ScoreboardScreen roomId={room._id} players={room.players} startNextRound={this.startRound} />;
+		if (room.currRound.state === 'finished' && this.state.currRoundScores) {
+			return (
+				<ScoreboardScreen
+					// roomId={room._id}
+					players={room.players}
+					startNextRound={this.startRound}
+					currRoundPlayerIdToScores={this.state.currRoundScores}
+					totalPlayerIdToScores={this.state.totalScores}
+				/>
+			);
 		}
 
 		// TODO return loading indicator otherwise
