@@ -386,6 +386,8 @@ if (Meteor.isServer) {
         }, Meteor.Error, 'action taken by non-active player');
       });
 
+      it('starting round 4, do not let the last person even-bid')
+
       it('can\'t start a round unless everyone has bid', () => {
         assert.throws(() => {
           Meteor.call('rooms.rounds.beginPlay', roomID);
