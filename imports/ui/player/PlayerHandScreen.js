@@ -5,13 +5,18 @@ import ClickableCard from '../ClickableCard';
 export default class PlayerHandScreen extends React.Component {
 	constructor(props) {
 		super(props);
-		const cardsWithIds = props.cards.map((card, i) => {
-			return { id: i, ...card };
-		});
-		const cardIdsToCards = {};
-		props.cards.forEach((card, i) => {
-			cardIdsToCards[i] = card;
-		});
+		let cardsWithIds = [];
+		let cardIdsToCards = {};
+
+		if (props.cards) {
+			cardsWithIds = props.cards.map((card, i) => {
+				return { id: i, ...card };
+			});
+			cardIdsToCards = {};
+			props.cards.forEach((card, i) => {
+				cardIdsToCards[i] = card;
+			});
+		}
 		this.state = {
 			bid: 0,
 			activeCardId: null,
