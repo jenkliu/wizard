@@ -8,6 +8,7 @@ export default class PlayerHandScreen extends React.Component {
 		let cardsWithIds = [];
 		let cardIdsToCards = {};
 
+		// can remove this if check
 		if (props.cards) {
 			cardsWithIds = props.cards.map((card, i) => {
 				return { id: i, ...card };
@@ -52,6 +53,7 @@ export default class PlayerHandScreen extends React.Component {
 	};
 
 	handleClickPlayCard = () => {
+		console.log('clicked play card');
 		const card = this.state.cardIdsToCards[this.state.activeCardId];
 		this.props.playCard(this.props.myPlayer._id, card);
 	};
@@ -116,9 +118,9 @@ export default class PlayerHandScreen extends React.Component {
 
 PlayerHandScreen.propTypes = {
 	myPlayer: PropTypes.object,
-	cards: PropTypes.array,
+	cards: PropTypes.array.isRequired,
 	activePlayer: PropTypes.object,
-	currRoundState: PropTypes.string, // 'bid' | 'play'
+	currRoundState: PropTypes.string, // 'bid' | 'play' | 'finished'
 	submitBid: PropTypes.func,
 	playCard: PropTypes.func
 };

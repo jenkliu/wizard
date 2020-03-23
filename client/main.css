@@ -29,6 +29,7 @@ body {
   border-radius: 5px;
   color: #fff;
   font-size: 28px;
+  cursor: pointer;
 }
 .btn:disabled {
   background-color: #808080;
