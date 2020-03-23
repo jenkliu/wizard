@@ -106,7 +106,7 @@ export function getPlayerIDsToScores(round) {
 Meteor.methods({
   'rooms.create'() {
     return RoomsCollection.insert({
-      gameState: 'waiting',
+      state: 'waiting',
       code: 'BALLS', // todo: make the code random, lol
       createdAt: new Date(),
       players: [],
@@ -137,7 +137,7 @@ Meteor.methods({
   'rooms.start'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     RoomsCollection.update(roomID, {
-      $set: { gameState: 'active', players: shuffle(room.players) }
+      $set: { state: 'active', players: shuffle(room.players) }
     });
   },
 
@@ -248,11 +248,8 @@ Meteor.methods({
     // get total scores from all historical rounds
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     scores = room.rounds.map(function(round) {
-      getPlayerIDsToScores(round);
+      return getPlayerIDsToScores(round);
     });
-
-    console.log('testing getPlayerIDsToScores');
-    console.log(scores);
 
     playerIDs = Object.keys(room.currRound.playerIDsToBids);
     playerIDsToScores = getPlayerIDsToScores(room.currRound);

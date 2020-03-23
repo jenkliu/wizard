@@ -8,7 +8,7 @@ Meteor.methods({
     // TODO if game for this room is active, throw error
 
     // fetch most recent room with this code
-    room = RoomsCollection.find({ code: roomCode, gameState: 'waiting' }, { sort: { createdAt: -1 } }).fetch()[0];
+    room = RoomsCollection.find({ code: roomCode, state: 'waiting' }, { sort: { createdAt: -1 } }).fetch()[0];
     if (room == null) {
       return;
     }
