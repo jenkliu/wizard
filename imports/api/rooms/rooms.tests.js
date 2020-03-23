@@ -290,7 +290,28 @@ if (Meteor.isServer) {
         assert.throws(() => {
           Meteor.call('rooms.removePlayer', playerID);
         }, Meteor.Error, 'cannot remove player from a non-waiting room');
+      });
 
+      it('cannot start an active or finished room', () => {
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.state, 'waiting');
+
+        Meteor.call('rooms.start', roomID);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.state, 'active');
+
+        assert.throws(() => {
+          Meteor.call('rooms.start', roomID);
+        }, Meteor.Error, 'you are trying to start a non-waiting room')
+
+        RoomsCollection.update(roomID, {
+          $set: { state: 'finished' }
+        });
+
+        assert.throws(() => {
+          Meteor.call('rooms.start', roomID);
+        }, Meteor.Error, 'you are trying to start a non-waiting room')
       });
 
       it('starting properly changes room state', () => {
@@ -328,6 +349,8 @@ if (Meteor.isServer) {
 
     describe('bidding', () => {
       let roomID;
+      let player1ID;
+      let player2ID;
 
       beforeEach(() => {
         RoomsCollection.remove({});
@@ -339,6 +362,12 @@ if (Meteor.isServer) {
         Meteor.call('rooms.addPlayer', player1_id);
         Meteor.call('rooms.addPlayer', player2_id);
         Meteor.call('rooms.start', roomID);
+
+        Meteor.call('rooms.rounds.start', roomID);
+        Meteor.call('rooms.rounds.deal', roomID);
+
+        player1ID = room.players[0]._id
+        player2ID = room.players[1]._id
       });
 
       it('let everyone bid', () => {
@@ -346,7 +375,27 @@ if (Meteor.isServer) {
       });
 
       it('yell at people who bid out of turn', () => {
-        // todo
+        assert.throws(() => {
+          Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
+        }, Meteor.Error, 'action taken by non-active player');
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+
+        assert.throws(() => {
+          Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+        }, Meteor.Error, 'action taken by non-active player');
+      });
+
+      it('can\'t start a round unless everyone has bid', () => {
+        assert.throws(() => {
+          Meteor.call('rooms.rounds.beginPlay', roomID);
+        }, Meteor.Error, 'everyone needs to bid before you begin play');
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+
+        assert.throws(() => {
+          Meteor.call('rooms.rounds.beginPlay', roomID);
+        }, Meteor.Error, 'everyone needs to bid before you begin play');
       });
     });
 
