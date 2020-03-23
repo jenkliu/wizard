@@ -1,5 +1,7 @@
 # w i z a r d s
 
+how to deploy: https://medium.com/@leonardykris/how-to-run-a-meteor-js-application-on-heroku-in-10-steps-7aceb12de234
+
 GRAB THE MOST RECENT ROOM
 db.rooms.find().sort({createdAt: -1})[0]
 
