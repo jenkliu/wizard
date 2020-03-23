@@ -2,11 +2,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ClickableCard from '../ClickableCard';
 
+function cardSortFnByValue(card1, card2) {
+	return card1.value - card2.value;
+}
+
+function sortCards(cards) {
+	const suitToCards = {
+		H: [],
+		C: [],
+		S: [],
+		D: []
+	};
+	const specialTypesToCards = {
+		Jester: [],
+		Wizard: []
+	};
+	cards.forEach(card => {
+		console.log(card.type);
+		if (card.type === 'Standard') suitToCards[card.suit].push(card);
+		else specialTypesToCards[card.type].push(card);
+	});
+	Object.keys(suitToCards).forEach(cat => suitToCards[cat].sort(cardSortFnByValue));
+	return suitToCards['C']
+		.concat(suitToCards['H'])
+		.concat(suitToCards['S'])
+		.concat(suitToCards['D'])
+		.concat(specialTypesToCards['Jester'])
+		.concat(specialTypesToCards['Wizard']);
+}
+
 export default class PlayerHandScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		let cardIdsToCards = {};
-		props.cards.forEach((card, i) => {
+		sortCards(props.cards).forEach((card, i) => {
 			cardIdsToCards[i] = { id: i, ...card };
 		});
 
@@ -103,7 +132,6 @@ export default class PlayerHandScreen extends React.Component {
 		}
 	}
 
-	// TODO sort cards
 	render() {
 		return (
 			<div>
