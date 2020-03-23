@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Card from '../Card';
 
-export default class Gameplay extends React.Component {
+export default class GameplayScreen extends React.Component {
   renderPlayer(player) {
-    const cardPlayed = this.props.currTrick.playerIDsToCards[player._id];
+    const cardPlayed = this.props.currTrick && this.props.currTrick.playerIDsToCards[player._id];
 
     return (
       <div className="player-card-container" key={player._id}>
@@ -36,7 +36,7 @@ export default class Gameplay extends React.Component {
   }
 }
 
-Gameplay.propTypes = {
+GameplayScreen.propTypes = {
   playerIdToBids: PropTypes.object, // { player_id: bid}
   players: PropTypes.array,
   trumpCard: PropTypes.object, // card: { suit: 'H', value: '4', type: 'Standard'}

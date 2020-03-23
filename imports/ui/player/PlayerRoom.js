@@ -19,17 +19,18 @@ class PlayerRoom extends React.Component {
 
 	submitBid = (playerId, bid) => {
 		Meteor.call('rooms.rounds.updateBid', this.props.room._id, playerId, bid);
-
-		// STUB TODO remove
-		Meteor.call('rooms.rounds.updateBid', this.props.room._id, 3, 1);
 	};
 
 	playCard = (playerId, card) => {
 		Meteor.call('rooms.tricks.playCard', this.props.room._id, playerId, card);
 	};
 
+	hasInitializedHand() {
+		return this.props.room.currRound && this.props.room.currRound.playerIDsToCards;
+	}
+
 	render() {
-		if (this.props.room.gameState === 'active' && this.props.room.currRound) {
+		if (this.props.room.gameState === 'active' && this.hasInitializedHand()) {
 			return (
 				<PlayerHandScreen
 					// cards={[
@@ -43,7 +44,7 @@ class PlayerRoom extends React.Component {
 					// 	{ suit: null, value: null, type: 'Wizard' }
 					// ]}
 					cards={this.props.room.currRound.playerIDsToCards[this.props.myPlayer._id]}
-					currRoundState="play"
+					currRoundState={this.props.room.currRound.state}
 					// myPlayer={{ _id: 1, name: 'Jen' }}
 					// activePlayer={{ _id: 1, name: 'Jen' }}
 					myPlayer={this.props.myPlayer}
