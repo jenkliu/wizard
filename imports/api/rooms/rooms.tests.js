@@ -369,7 +369,7 @@ if (Meteor.isServer) {
         Meteor.call('rooms.start', roomID);
       });
 
-      it('play a round', () => {
+      it('let\'s play a game of wizards', () => {
         wizardCard = {'suit': null, 'value': null, type: 'Wizard'};
         jesterCard = {'suit': null, 'value': null, type: 'Jester'};
 
