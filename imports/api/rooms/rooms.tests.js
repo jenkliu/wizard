@@ -348,9 +348,13 @@ if (Meteor.isServer) {
       it('yell at people who play out of turn', () => {
         // todo
       });
+
+      it('ensure proper returns', () => {
+        // todo: when you play a card, ensure that you return all cards that have been played
+      });
     });
 
-    describe('playing a round', () => {
+    describe('playing a game of wizards', () => {
       let roomID;
 
       beforeEach(() => {
@@ -367,6 +371,8 @@ if (Meteor.isServer) {
 
       it('play a round', () => {
         // todo: make numTricks just like [1, 2] or something
+        // todo: ensure that rooms.tricks.finish properly returns isLastTrick
+        // todo: ensure that rooms.rounds.finish properly returns isLastRound
       });
     });
   });
