@@ -15,7 +15,7 @@ body {
   width: 48px;
   height: 80px;
   background-color: #fff;
-  border: 1px solid #000;
+  border: 1px dashed #808080;
   margin: 16px;
   padding: 4px;
   display: flex;
@@ -37,7 +37,7 @@ body {
 .btn {
   width: 300px;
   height: 50px;
-  background-color: #00f;
+  background-color: #2f7353;
   border-radius: 5px;
   color: #fff;
   font-size: 28px;
