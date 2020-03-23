@@ -37,8 +37,8 @@ export default class GameplayScreen extends React.Component {
 }
 
 GameplayScreen.propTypes = {
-  playerIdToBids: PropTypes.object, // { player_id: bid}
-  players: PropTypes.array,
-  trumpCard: PropTypes.object, // card: { suit: 'H', value: '4', type: 'Standard'}
-  currTrick: PropTypes.object // {cardsPlayed: {playerId: card}}
+  playerIdToBids: PropTypes.object.isRequired, // { player_id: bid}
+  players: PropTypes.array.isRequired,
+  trumpCard: PropTypes.object.isRequired, // card: { suit: 'H'.isRequired, value: '4', type: 'Standard'}
+  currTrick: PropTypes.object.isRequired // {cardsPlayed: {playerId: card}}
 };
