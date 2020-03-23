@@ -15,13 +15,6 @@ export default class ScoreboardScreen extends React.Component {
   }
 
   render() {
-    // return (
-    //   <div>
-    //     <h1>Scores</h1>
-    //     COMING SOON once Dean tests this code
-    //     <button onClick={this.props.startNextRound}>Start next round</button>
-    //   </div>
-    // );
     return (
       <div>
         <h1>Scores</h1>
@@ -40,15 +33,3 @@ ScoreboardScreen.propTypes = {
   startNextRound: PropTypes.func.isRequired,
   isLastRound: PropTypes.bool // to do figure out how to get this
 };
-
-// export default withTracker(({ roomId, players, startNextRound }) => {
-//   const currRoundPlayerIdToScores = Meteor.call('rooms.rounds.getCurrRoundPlayerIDsToScores', roomId);
-//   const totalPlayerIdToScores = Meteor.call('rooms.rounds.getPlayerIDsToScores', roomId);
-
-//   return {
-//     currRoundPlayerIdToScores,
-//     totalPlayerIdToScores,
-//     players,
-//     startNextRound
-//   };
-// })(ScoreboardScreen);

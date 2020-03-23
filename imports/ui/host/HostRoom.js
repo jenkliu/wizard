@@ -35,10 +35,8 @@ class HostRoom extends React.Component {
 	fetchScores = () => {
 		Meteor.call('rooms.rounds.getCurrRoundPlayerIDsToScores', this.props.room._id, (error, currRoundScores) => {
 			if (error) console.error(error);
-			console.log('CURR ROUND SCORES', currRoundScores);
 			Meteor.call('rooms.rounds.getPlayerIDsToScores', this.props.room._id, (error, totalScores) => {
 				if (error) console.error(error);
-				console.log('TOTAL ROUND SCORES', totalScores);
 				this.setState({ currRoundScores, totalScores });
 			});
 		});
@@ -75,7 +73,6 @@ class HostRoom extends React.Component {
 		if (room.currRound.state === 'finished' && this.state.currRoundScores) {
 			return (
 				<ScoreboardScreen
-					// roomId={room._id}
 					players={room.players}
 					startNextRound={this.startRound}
 					currRoundPlayerIdToScores={this.state.currRoundScores}
