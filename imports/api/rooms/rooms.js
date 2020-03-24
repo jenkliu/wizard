@@ -355,9 +355,9 @@ Meteor.methods({
   'rooms.tricks.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
-    
-    for (i = 0; i < room.players.length; i++) {
-      if (!currRound.currTrick.playerIDsToCards[room.players[i]._id]) {
+
+    for (player of room.players) {
+      if (!currRound.currTrick.playerIDsToCards[player._id]) {
         throw new Meteor.Error('people still need to play their cards');
       }
     }
