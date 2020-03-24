@@ -116,8 +116,7 @@ Meteor.methods({
       code: code,
       createdAt: new Date(),
       players: [],
-      // numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      numTricksArr: [10],
+      numTricksArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 
       rounds: [],
       currRound: null
