@@ -113,100 +113,100 @@ if (Meteor.isServer) {
         assert.equal(isLegalPlay(
           null,
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
           ],
-          {suit: 'S', value: 7, type: 'Standard'}
+          {id: 45, suit: 'S', value: 7, type: 'Standard'}
         ), true);
       });
 
       it('wizard-led', () => {
         assert.equal(isLegalPlay(
-          {suit: null, value: null, type: 'Wizard'},
+          {id: 53, suit: null, value: null, type: 'Wizard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
-            {suit: null, value: null, type: 'Wizard'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
+            {id: 53, suit: null, value: null, type: 'Wizard'},
           ],
-          {suit: 'S', value: 7, type: 'Standard'}
+          {id: 45, suit: 'S', value: 7, type: 'Standard'}
         ), true);
 
         assert.equal(isLegalPlay(
-          {suit: null, value: null, type: 'Wizard'},
+          {id: 53, suit: null, value: null, type: 'Wizard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
-            {suit: null, value: null, type: 'Wizard'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
+            {id: 53, suit: null, value: null, type: 'Wizard'},
           ],
-          {suit: null, value: null, type: 'Wizard'},
+          {id: 53, suit: null, value: null, type: 'Wizard'},
         ), true);
       });
 
       it('following suit', () => {
         assert.equal(isLegalPlay(
-          {suit: 'S', value: 6, type: 'Standard'},
+          {id: 44, suit: 'S', value: 6, type: 'Standard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
           ],
-          {suit: 'S', value: 7, type: 'Standard'}
+          {id: 45, suit: 'S', value: 7, type: 'Standard'}
         ), true);
 
         assert.equal(isLegalPlay(
-          {suit: 'S', value: 6, type: 'Standard'},
+          {id: 44, suit: 'S', value: 6, type: 'Standard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
           ],
-          {suit: 'D', value: 9, type: 'Standard'}
+          {id: 21, suit: 'D', value: 9, type: 'Standard'}
         ), false);
       });
 
       it('off-suit', () => {
         assert.equal(isLegalPlay(
-          {suit: 'S', value: 6, type: 'Standard'},
+          {id: 44, suit: 'S', value: 6, type: 'Standard'},
           [
-            {suit: 'D', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
+            {id: 19, suit: 'D', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
           ],
-          {suit: 'D', value: 7, type: 'Standard'},
+          {id: 19, suit: 'D', value: 7, type: 'Standard'},
         ), true);
       });
 
       it('non-standard cards can be played whenever you want', () => {
         assert.equal(isLegalPlay(
-          {suit: 'S', value: 6, type: 'Standard'},
+          {id: 44, suit: 'S', value: 6, type: 'Standard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: null, value: null, type: 'Wizard'},
-            {suit: null, value: null, type: 'Wizard'},
-            {suit: null, value: null, type: 'Jester'},
-            {suit: null, value: null, type: 'Jester'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 53, suit: null, value: null, type: 'Wizard'},
+            {id: 54, suit: null, value: null, type: 'Wizard'},
+            {id: 57, suit: null, value: null, type: 'Jester'},
+            {id: 58, suit: null, value: null, type: 'Jester'},
           ],
-          {suit: null, value: null, type: 'Wizard'}
+          {id: 53, suit: null, value: null, type: 'Wizard'}
         ), true);
 
         assert.equal(isLegalPlay(
-          {suit: 'S', value: 6, type: 'Standard'},
+          {id: 44, suit: 'S', value: 6, type: 'Standard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: null, value: null, type: 'Wizard'},
-            {suit: null, value: null, type: 'Wizard'},
-            {suit: null, value: null, type: 'Jester'},
-            {suit: null, value: null, type: 'Jester'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 53, suit: null, value: null, type: 'Wizard'},
+            {id: 54, suit: null, value: null, type: 'Wizard'},
+            {id: 57, suit: null, value: null, type: 'Jester'},
+            {id: 58, suit: null, value: null, type: 'Jester'},
           ],
-          {suit: null, value: null, type: 'Jester'}
+          {id: 57, suit: null, value: null, type: 'Jester'}
         ), true);
       });
 
       it('playing a non-existant wizard', () => {
         assert.equal(isLegalPlay(
-          {suit: 'S', value: 6, type: 'Standard'},
+          {id: 44, suit: 'S', value: 6, type: 'Standard'},
           [
-            {suit: 'S', value: 7, type: 'Standard'},
-            {suit: 'D', value: 9, type: 'Standard'},
+            {id: 45, suit: 'S', value: 7, type: 'Standard'},
+            {id: 21, suit: 'D', value: 9, type: 'Standard'},
           ],
-          {suit: null, value: null, type: 'Wizard'}
+          {id: 53, suit: null, value: null, type: 'Wizard'}
         ), false);
       });
     });
@@ -403,22 +403,64 @@ if (Meteor.isServer) {
 
     describe('playing tricks', () => {
       let roomID;
+      let player1ID;
+      let player2ID;
+      let wizardCard1;
+      let wizardCard2;
+      let jesterCard1;
+      let jesterCard2;
 
       beforeEach(() => {
         RoomsCollection.remove({});
         PlayersCollection.remove({});
         roomID = Meteor.call('rooms.create');
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
-        player1_id = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
-        player2_id = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
-        Meteor.call('rooms.addPlayer', player1_id);
-        Meteor.call('rooms.addPlayer', player2_id);
+        deanID = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        jenniferID = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        Meteor.call('rooms.addPlayer', deanID);
+        Meteor.call('rooms.addPlayer', jenniferID);
         Meteor.call('rooms.start', roomID);
+
+        RoomsCollection.update(roomID, {
+          $set: { numTricksArr: [2] }
+        });
+        Meteor.call('rooms.rounds.start', roomID);
+        Meteor.call('rooms.rounds.deal', roomID);
+
+        player1ID = room.players[0]._id
+        player2ID = room.players[1]._id
+
+        wizardCard1 = {id: 53, suit: null, value: null, type: 'Wizard'};
+        wizardCard2 = {id: 54, suit: null, value: null, type: 'Wizard'};
+        jesterCard1 = {id: 57, suit: null, value: null, type: 'Jester'};
+        jesterCard2 = {id: 58, suit: null, value: null, type: 'Jester'};
+
+        // override player cards
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        currRound = room.currRound
+        currRound.playerIDsToCards[player1ID] = [ wizardCard1, wizardCard2 ];
+        currRound.playerIDsToCards[player2ID] = [ jesterCard1, jesterCard2 ];
+        RoomsCollection.update(roomID, {
+          $set: { currRound: currRound }
+        });
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
+        Meteor.call('rooms.rounds.beginPlay', roomID);
+        Meteor.call('rooms.tricks.start', roomID);
       });
 
       it('yell at people who play out of turn');
 
       it('activePlayer should null after everyone plays a card');
+
+      it('ensure proper behavior when a player has duplicate cards', () => {
+        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard2);
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.playerIDsToCards[player2ID][0].id, jesterCard1.id);
+        assert.equal(room.currRound.playerIDsToCards[player1ID].length, 2);
+      });
 
       it('ensure proper returns', () => {
         // todo: when you play a card, ensure that you return all cards that have been played
@@ -441,8 +483,10 @@ if (Meteor.isServer) {
       });
 
       it('let\'s play a game of wizards', () => {
-        wizardCard = {'suit': null, 'value': null, type: 'Wizard'};
-        jesterCard = {'suit': null, 'value': null, type: 'Jester'};
+        wizardCard1 = {id: 53, suit: null, value: null, type: 'Wizard'};
+        wizardCard2 = {id: 54, suit: null, value: null, type: 'Wizard'};
+        jesterCard1 = {id: 57, suit: null, value: null, type: 'Jester'};
+        jesterCard2 = {id: 58, suit: null, value: null, type: 'Jester'};
 
         RoomsCollection.update(roomID, {
           $set: { numTricksArr: [1, 2] }
@@ -456,8 +500,8 @@ if (Meteor.isServer) {
         // override player cards
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
         currRound = room.currRound
-        currRound.playerIDsToCards[player1ID] = [ wizardCard ];
-        currRound.playerIDsToCards[player2ID] = [ jesterCard ];
+        currRound.playerIDsToCards[player1ID] = [ wizardCard1 ];
+        currRound.playerIDsToCards[player2ID] = [ jesterCard1 ];
         RoomsCollection.update(roomID, {
           $set: { currRound: currRound }
         });
@@ -473,13 +517,13 @@ if (Meteor.isServer) {
         Meteor.call('rooms.rounds.beginPlay', roomID);
         Meteor.call('rooms.tricks.start', roomID);
 
-        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard);
+        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard1);
         assert.equal(Object.keys(playCardCallback).length, 1);
-        assert.equal(playCardCallback[player2ID].type, jesterCard.type);
-        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard);
+        assert.equal(playCardCallback[player2ID].id, jesterCard1.id);
+        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
         assert.equal(Object.keys(playCardCallback).length, 2);
-        assert.equal(playCardCallback[player2ID].type, jesterCard.type);
-        assert.equal(playCardCallback[player1ID].type, wizardCard.type);
+        assert.equal(playCardCallback[player2ID].id, jesterCard1.id);
+        assert.equal(playCardCallback[player1ID].id, wizardCard1.id);
 
         // ensure that cards were removed
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
@@ -512,8 +556,8 @@ if (Meteor.isServer) {
         // override player cards
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
         currRound = room.currRound
-        currRound.playerIDsToCards[player1ID] = [ wizardCard, jesterCard ];
-        currRound.playerIDsToCards[player2ID] = [ wizardCard, jesterCard ];
+        currRound.playerIDsToCards[player1ID] = [ wizardCard1, jesterCard1 ];
+        currRound.playerIDsToCards[player2ID] = [ wizardCard2, jesterCard2 ];
         RoomsCollection.update(roomID, {
           $set: { currRound: currRound }
         });
@@ -528,18 +572,18 @@ if (Meteor.isServer) {
 
         Meteor.call('rooms.rounds.beginPlay', roomID);
         Meteor.call('rooms.tricks.start', roomID);
-        Meteor.call('rooms.tricks.playCard', roomID, player1ID, jesterCard);
-        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, wizardCard);
+        Meteor.call('rooms.tricks.playCard', roomID, player1ID, jesterCard1);
+        playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, wizardCard2);
         assert.equal(Object.keys(playCardCallback).length, 2);
-        assert.equal(playCardCallback[player1ID].type, jesterCard.type);
-        assert.equal(playCardCallback[player2ID].type, wizardCard.type);
+        assert.equal(playCardCallback[player1ID].id, jesterCard1.id);
+        assert.equal(playCardCallback[player2ID].id, wizardCard2.id);
         finishTrickCallback = Meteor.call('rooms.tricks.finish', roomID);
         assert.equal(finishTrickCallback.winningPlayerID, player2ID);
         assert.equal(finishTrickCallback.isLastTrick, false);
 
         Meteor.call('rooms.tricks.start', roomID);
-        Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard);
-        Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard);
+        Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard2);
+        Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
         finishTrickCallback = Meteor.call('rooms.tricks.finish', roomID);
         assert.equal(finishTrickCallback.winningPlayerID, player1ID);
         assert.equal(finishTrickCallback.isLastTrick, true);

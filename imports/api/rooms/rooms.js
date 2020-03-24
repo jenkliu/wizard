@@ -15,7 +15,7 @@ function getNextPlayerID(players, currentPlayerID) {
 export function isLegalPlay(trickLeadCard, hand, card) {
   // Make sure the card exists in the hand!
   matchingCards = hand.filter(function(handCard) {
-    return handCard.suit == card.suit && handCard.value == card.value && handCard.type == card.type;
+    return handCard.id == card.id;
   });
   if (matchingCards.length == 0) {
     return false;
@@ -201,15 +201,16 @@ Meteor.methods({
 
     deck = [];
     suits = ['S', 'H', 'C', 'D'];
-    suits.forEach(function(suit) {
+    for (i = 0; i < suits.length; i++) {
       for (value = 2; value <= 14; value++) {
         deck.push({
-          suit: suit,
+          id: i * 13 + value - 1,
+          suit: suits[i],
           value: value,
           type: 'Standard'
         });
       }
-    });
+    }
     shuffle(deck);
     // Set trumpCard, ensuring (for now) that it's neither a Wizard nor a
     // Jester.
@@ -217,8 +218,8 @@ Meteor.methods({
 
     // Add Wizards and Jesters
     for (i = 0; i < 4; i++) {
-      deck.push({ suit: null, value: null, type: 'Wizard' });
-      deck.push({ suit: null, value: null, type: 'Jester' });
+      deck.push({ id: 53 + i, suit: null, value: null, type: 'Wizard' });
+      deck.push({ id: 57 + i, suit: null, value: null, type: 'Jester' });
     }
     shuffle(deck);
 
@@ -337,7 +338,7 @@ Meteor.methods({
     currRound.activePlayerID = getNextPlayerID(room.players, playerID);
 
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
-      return !(handCard.suit == card.suit && handCard.value == card.value && handCard.type == card.type);
+      return !(handCard.id == card.id);
     });
     currRound.playerIDsToCards[playerID] = playerCards;
 
