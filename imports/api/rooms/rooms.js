@@ -356,8 +356,10 @@ Meteor.methods({
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
     
-    if (Object.keys(currRound.currTrick.playerIDsToCards).length < room.players.length) {
-      throw new Meteor.Error('people still need to play their cards');
+    for (i = 0; i < room.players.length; i++) {
+      if (!currRound.currTrick.playerIDsToCards[room.players[i]._id]) {
+        throw new Meteor.Error('people still need to play their cards');
+      }
     }
 
     orderedPlayerIDs = [];
