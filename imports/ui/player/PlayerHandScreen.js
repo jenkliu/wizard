@@ -51,7 +51,6 @@ export default class PlayerHandScreen extends React.Component {
 	}
 
 	handleSubmitBid = () => {
-		console.log('submitting bid');
 		this.props.submitBid(this.props.myPlayer._id, this.state.bid);
 	};
 
@@ -63,7 +62,9 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<div>
 				<input placeholder="Enter your bid" value={this.state.bid} onChange={this.handleChangeBid} />
-				<button onClick={this.handleSubmitBid}>Submit</button>
+				<button className="btn inline" onClick={this.handleSubmitBid}>
+					Submit
+				</button>
 			</div>
 		);
 	}
@@ -93,6 +94,7 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<ClickableCard
 				isActive={cardId === this.state.activeCardId}
+				isClickable={this.isMyTurn() && this.props.currRoundState === 'play'}
 				onClick={this.handleClickCard.bind(this, cardId)}
 				key={cardId}
 				suit={card.suit}
@@ -126,7 +128,7 @@ export default class PlayerHandScreen extends React.Component {
 		} else {
 			return (
 				<button disabled={this.state.activeCardId === null} className="btn" onClick={this.handleClickPlayCard}>
-					PLAY CARD
+					Play card
 				</button>
 			);
 		}

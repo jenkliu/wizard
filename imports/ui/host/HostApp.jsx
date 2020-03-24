@@ -23,9 +23,10 @@ export default class HostApp extends React.Component {
 	};
 
 	render() {
-		if (this.state.roomId) {
-			return <HostRoom roomId={this.state.roomId} />;
-		}
-		return <WelcomeScreen createRoom={this.createRoom} />;
+		return (
+			<div className="host-app-container">
+				{this.state.roomId ? <HostRoom roomId={this.state.roomId} /> : <WelcomeScreen createRoom={this.createRoom} />}
+			</div>
+		);
 	}
 }

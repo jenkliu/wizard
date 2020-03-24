@@ -28,9 +28,14 @@ export default class PlayerApp extends React.Component {
 	};
 
 	render() {
-		if (!this.state.myPlayerId) {
-			return <PlayerJoinScreen joinGame={this.joinGame} />;
-		}
-		return <PlayerRoom myPlayerId={this.state.myPlayerId} />;
+		return (
+			<div className="player-app-container">
+				{this.state.myPlayerId ? (
+					<PlayerRoom myPlayerId={this.state.myPlayerId} />
+				) : (
+					<PlayerJoinScreen joinGame={this.joinGame} />
+				)}
+			</div>
+		);
 	}
 }

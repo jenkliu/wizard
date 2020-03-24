@@ -1,15 +1,15 @@
 // modified from https://codepen.io/ursooperduper/pen/EXWxdW
-import React from "react";
-import classNames from "classnames";
-import PropTypes from "prop-types";
+import React from 'react';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 const getSuitSymbol = suit => {
   if (!suit) return null;
   const suitMap = {
-    S: "♠︎",
-    H: "♥︎",
-    C: "♣︎",
-    D: "♦︎"
+    S: '♠︎',
+    H: '♥︎',
+    C: '♣︎',
+    D: '♦︎'
   };
   return suitMap[suit];
 };
@@ -18,10 +18,10 @@ const getDisplayValue = value => {
   if (!value) return null;
   if (value > 0 && value < 11) return value;
   const valueMap = {
-    11: "J",
-    12: "Q",
-    13: "K",
-    14: "A"
+    11: 'J',
+    12: 'Q',
+    13: 'K',
+    14: 'A'
   };
   return valueMap[value];
 };
@@ -29,7 +29,7 @@ const getDisplayValue = value => {
 export default class Card extends React.Component {
   renderSpecialCard() {
     const { type } = this.props;
-    const value = type === "Wizard" ? "W" : "JE";
+    const value = type === 'Wizard' ? 'W' : 'JE';
 
     // TODO: add graphics for wizards/jesters (Bonny?)
     return (
@@ -46,11 +46,11 @@ export default class Card extends React.Component {
 
   render() {
     const { suit, value, type } = this.props;
-    const classes = classNames("card", {
-      "card-black": suit == "C" || suit == "S",
-      "card-red": suit == "H" || suit == "D"
+    const classes = classNames('card', {
+      'card-black': suit == 'C' || suit == 'S',
+      'card-red': suit == 'H' || suit == 'D'
     });
-    if (type !== "Standard") return this.renderSpecialCard();
+    if (type !== 'Standard') return this.renderSpecialCard();
 
     return (
       <div className={classes}>

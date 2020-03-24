@@ -3,17 +3,25 @@ import PropTypes from 'prop-types';
 
 export default class WaitingRoomScreen extends React.Component {
 	renderPlayer(player) {
-		return <ul key={player._id}>{player.name}</ul>;
+		return <ps key={player._id}>{player.name}</ps>;
 	}
 
 	render() {
 		return (
 			<div>
 				<h1> Game code</h1>
-				{this.props.code}
-				<h1>Players in this game:</h1>
-				<ul>{this.props.players.map(player => this.renderPlayer(player))}</ul>
-				<button onClick={this.props.startGame}>Start game</button>
+				<div className="game-code">{this.props.code}</div>
+				<div className="players-list">
+					<h1>Players in this game:</h1>
+					<p>
+						{this.props.players.length > 0
+							? this.props.players.map(player => this.renderPlayer(player))
+							: 'None yet. Join the game at wizard.dog using the code above!'}
+					</p>
+				</div>
+				<button className="btn" onClick={this.props.startGame}>
+					Start game
+				</button>
 			</div>
 		);
 	}

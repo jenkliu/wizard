@@ -90,7 +90,7 @@ export default class GameplayScreen extends React.Component {
         <h1>{title}</h1>
         <div className="trump-card">
           <Card value={this.props.trumpCard.value} suit={this.props.trumpCard.suit} type={this.props.trumpCard.type} />
-          Trump
+          <p>Trump</p>
         </div>
         <div className="player-cards-container">{this.props.players.map(player => this.renderPlayer(player))}</div>
       </div>

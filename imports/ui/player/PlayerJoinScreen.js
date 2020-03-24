@@ -12,11 +12,11 @@ export default class PlayerJoinScreen extends React.Component {
 	}
 
 	handleChangeGameCode = e => {
-		this.setState({ gameCode: e.target.value });
+		this.setState({ gameCode: e.target.value.toUpperCase() });
 	};
 
 	handleChangeName = e => {
-		this.setState({ name: e.target.value });
+		this.setState({ name: e.target.value.toUpperCase() });
 	};
 
 	// TODO create real browserKey for 2nd param
@@ -34,7 +34,9 @@ export default class PlayerJoinScreen extends React.Component {
 				<div>
 					<input placeholder="Enter your name" value={this.state.name} onChange={this.handleChangeName} />
 				</div>
-				<button onClick={this.handleClickPlay}>Play</button>
+				<button className="btn" onClick={this.handleClickPlay}>
+					Play
+				</button>
 			</div>
 		);
 	}

@@ -1,29 +1,83 @@
+//////////////////// GENERAL
+
 wizard_blue = rgb(47,115,83)
 
 body
 	padding 10px
 	font-family sans-serif
 
+.btn
+	width 300px
+	height 50px
+	background-color wizard_blue
+	border-radius 5px
+	color white
+	font-size 28px
+	cursor pointer
+	padding-left 40px
+	padding-right 40px
+	border 1px solid wizard_blue
+	
+	&.inline
+		width auto
+		margin-left 10px
+	
+	&:disabled
+		background-color gray
+
 ////////////////////// HOST
 
+.host-app-container
+	display flex
+	align-items center
+	justify-content center
+	text-align center
+	padding-top 100px
+
+img
+	margin 30px 0
+
+.players-list
+	margin-bottom 50px
+
+.game-code
+	display inline-block
+	font-size 48px
+	font-weight bold
+	border 1px solid black
+	padding 20px
+	
 .player-bid
 	display flex
-	width 25%
+	// width 25%
 	justify-content space-between
 	
+.trump-card
+	display flex
+	align-items center
+	justify-content center
+	margin-bottom 40px
+	flex-wrap wrap
+	
+	p
+		flex-grow 1
+		width 100%
+	
+
 .player-cards-container
 	display flex
 	justify-content space-between
 	
 // copied from card.css	
 .placeholder-card
-	width 48px
-	height 80px
+	width 60px
+	height 100px
+	border-radius 8px
 	background-color #fff
 	border 1px dashed gray
-	margin 16px
 	padding 4px
 	display flex
+	margin-bottom 20px
 	
 .active-player-indicator
 	justify-content center
@@ -36,6 +90,9 @@ body
 .card
 	.player-card.is-winner &
 			border 5px solid green		
+
+.bid
+	margin-bottom 10px
 
 trick_display_size = 20px
 .trick
@@ -53,26 +110,49 @@ trick_display_size = 20px
 		background-color red
 
 	////////////////////// PLAYER
-		
 
-.player-hand
-	display flex		
+.player-app-container
+	display flex
+	align-items center
+	justify-content center
+	text-align center
+	margin 20px
 	
-.btn
-	width 300px
+
+input
+	width 280px
 	height 50px
-	background-color wizard_blue
-	border-radius 5px
-	color white
+	margin-bottom 15px
+	padding 0 10px
 	font-size 28px
-	cursor pointer
+	border-radius 5px
+	box-shadow none
+	border 1px solid #cccccc
+
+card_overlap_width = 30px
+.player-hand
+	display flex	
+	margin-left card_overlap_width	
+	margin-bottom 30px
 	
-	&:disabled
-		background-color gray
+	// hide right half when cards are overlapping in hand
+	.clickable-card:not(:last-child) .card-br
+		display none
+		
+	.card
+		margin-left -1 * card_overlap_width
 	
 .clickable-card
 	&.is-active
+		margin-top -20px
+		transition 300ms ease
+		
 		.card
 			border 3px solid orange
-	&:hover
+
+	&.is-clickable:hover
 		cursor pointer
+		
+.status
+	font-size 24px
+	margin-bottom 30px

@@ -2,23 +2,73 @@ body {
   padding: 10px;
   font-family: sans-serif;
 }
+.btn {
+  width: 300px;
+  height: 50px;
+  background-color: #2f7353;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  padding-left: 40px;
+  padding-right: 40px;
+  border: 1px solid #2f7353;
+}
+.btn.inline {
+  width: auto;
+  margin-left: 10px;
+}
+.btn:disabled {
+  background-color: #808080;
+}
+.host-app-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 100px;
+}
+img {
+  margin: 30px 0;
+}
+.players-list {
+  margin-bottom: 50px;
+}
+.game-code {
+  display: inline-block;
+  font-size: 48px;
+  font-weight: bold;
+  border: 1px solid #000;
+  padding: 20px;
+}
 .player-bid {
   display: flex;
-  width: 25%;
   justify-content: space-between;
+}
+.trump-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.trump-card p {
+  flex-grow: 1;
+  width: 100%;
 }
 .player-cards-container {
   display: flex;
   justify-content: space-between;
 }
 .placeholder-card {
-  width: 48px;
-  height: 80px;
+  width: 60px;
+  height: 100px;
+  border-radius: 8px;
   background-color: #fff;
   border: 1px dashed #808080;
-  margin: 16px;
   padding: 4px;
   display: flex;
+  margin-bottom: 20px;
 }
 .active-player-indicator {
   justify-content: center;
@@ -30,6 +80,9 @@ body {
 }
 .player-card.is-winner .card {
   border: 5px solid #008000;
+}
+.bid {
+  margin-bottom: 10px;
 }
 .trick {
   display: inline-flex;
@@ -45,24 +98,45 @@ body {
 .trick.extra {
   background-color: #f00;
 }
+.player-app-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 20px;
+}
+input {
+  width: 280px;
+  height: 50px;
+  margin-bottom: 15px;
+  padding: 0 10px;
+  font-size: 28px;
+  border-radius: 5px;
+  box-shadow: none;
+  border: 1px solid #ccc;
+}
 .player-hand {
   display: flex;
+  margin-left: 30px;
+  margin-bottom: 30px;
 }
-.btn {
-  width: 300px;
-  height: 50px;
-  background-color: #2f7353;
-  border-radius: 5px;
-  color: #fff;
-  font-size: 28px;
-  cursor: pointer;
+.player-hand .clickable-card:not(:last-child) .card-br {
+  display: none;
 }
-.btn:disabled {
-  background-color: #808080;
+.player-hand .card {
+  margin-left: -30px;
+}
+.clickable-card.is-active {
+  margin-top: -20px;
+  transition: 300ms ease;
 }
 .clickable-card.is-active .card {
   border: 3px solid #ffa500;
 }
-.clickable-card:hover {
+.clickable-card.is-clickable:hover {
   cursor: pointer;
+}
+.status {
+  font-size: 24px;
+  margin-bottom: 30px;
 }
