@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class WaitingRoomScreen extends React.Component {
 	renderPlayer(player) {
-		return <ps key={player._id}>{player.name}</ps>;
+		return <p key={player._id}>{player.name}</p>;
 	}
 
 	render() {
