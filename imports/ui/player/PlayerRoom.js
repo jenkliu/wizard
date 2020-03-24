@@ -52,7 +52,7 @@ class PlayerRoom extends React.Component {
 								Meteor.call('rooms.rounds.finish', this.props.room._id, (error, data) => {
 									// TODO: add callback: if data. isLastRound, then finish room
 								});
-							}, 2000);
+							}, 3000);
 						}
 					});
 				}

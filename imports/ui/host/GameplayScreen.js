@@ -30,7 +30,7 @@ export default class GameplayScreen extends React.Component {
 
       setTimeout(() => {
         this.props.startTrick();
-      }, 2000);
+      }, 3000);
     }
   }
 
