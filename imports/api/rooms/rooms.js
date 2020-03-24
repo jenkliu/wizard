@@ -355,7 +355,10 @@ Meteor.methods({
   'rooms.tricks.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
-    // todo: throw an error if not everyone has played a card
+    
+    if (Object.keys(currRound.currTrick.playerIDsToCards).length < room.players.length) {
+      throw new Meteor.Error('people still need to play their cards');
+    }
 
     orderedPlayerIDs = [];
     playerIDs = room.players.map(function(p) {
