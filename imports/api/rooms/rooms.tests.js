@@ -416,9 +416,9 @@ if (Meteor.isServer) {
         Meteor.call('rooms.start', roomID);
       });
 
-      it('yell at people who play out of turn', () => {
-        // todo
-      });
+      it('yell at people who play out of turn');
+
+      it('activePlayer should null after everyone plays a card');
 
       it('ensure proper returns', () => {
         // todo: when you play a card, ensure that you return all cards that have been played
