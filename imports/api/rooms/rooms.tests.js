@@ -450,9 +450,46 @@ if (Meteor.isServer) {
         Meteor.call('rooms.tricks.start', roomID);
       });
 
-      it('yell at people who play out of turn');
+      it('yell at people who play out of turn', () => {
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+        }, Meteor.Error, 'action taken by non-active player');
 
-      it('activePlayer should null after everyone plays a card');
+        Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard1);
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard2);
+        }, Meteor.Error, 'action taken by non-active player');
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard2);
+        }, Meteor.Error, 'action taken by non-active player');
+      });
+
+      it('activePlayer should be null after everyone plays a card', () => {
+        Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard1);
+        Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.activePlayerID, null);
+      });
+
+      it('don\'t let them call rooms.tricks.finish unless everyone\'s played', () => {
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.finish', roomID);
+        }, Meteor.Error, 'people still need to play their cards');
+
+        Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard1);
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.finish', roomID);
+        }, Meteor.Error, 'people still need to play their cards');
+
+        Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+
+        finishTrickCallback = Meteor.call('rooms.tricks.finish', roomID);
+        assert.equal(finishTrickCallback.winningPlayerID, player1ID);
+      })
 
       it('ensure proper behavior when a player has duplicate cards', () => {
         playCardCallback = Meteor.call('rooms.tricks.playCard', roomID, player2ID, jesterCard2);

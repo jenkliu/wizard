@@ -335,12 +335,17 @@ Meteor.methods({
     if (!currRound.currTrick.leadCard && card.type != 'Jester') {
       currRound.currTrick.leadCard = card;
     }
-    currRound.activePlayerID = getNextPlayerID(room.players, playerID);
 
     playerCards = currRound.playerIDsToCards[playerID].filter(function(handCard) {
       return !(handCard.id == card.id);
     });
     currRound.playerIDsToCards[playerID] = playerCards;
+
+    if (Object.keys(currRound.currTrick.playerIDsToCards).length < room.players.length) {
+      currRound.activePlayerID = getNextPlayerID(room.players, playerID);
+    } else {
+      currRound.activePlayerID = null;
+    }
 
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
