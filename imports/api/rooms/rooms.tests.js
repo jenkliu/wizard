@@ -386,7 +386,25 @@ if (Meteor.isServer) {
         }, Meteor.Error, 'action taken by non-active player');
       });
 
-      it('starting round 4, do not let the last person even-bid')
+      it('starting round 4, do not let the last person even-bid', () => {
+        RoomsCollection.update(roomID, {
+          $set: { numTricksArr: [1, 4] }
+        });
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+        Meteor.call('rooms.rounds.finish', roomID);
+        Meteor.call('rooms.rounds.start', roomID);
+        Meteor.call('rooms.rounds.deal', roomID);
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 0);
+
+        assert.throws(() => {
+          Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 4);
+        }, Meteor.Error, 'cannot bid 4');
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 5);
+      });
 
       it('can\'t start a round unless everyone has bid', () => {
         assert.throws(() => {

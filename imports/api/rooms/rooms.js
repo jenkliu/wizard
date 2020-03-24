@@ -251,6 +251,13 @@ Meteor.methods({
 
     currRound = room.currRound;
     currRound.playerIDsToBids[playerID] = bid;
+
+    bidValues = Object.values(currRound.playerIDsToBids);
+    bidSum = bidValues.reduce(function(acc, i) { return acc + i;}, 0);
+    if (currRound.numTricks >= 4 && bidValues.length == room.players.length && bidSum == currRound.numTricks) {
+      throw new Meteor.Error('cannot bid ' + bid)
+    }
+
     currRound.activePlayerID = getNextPlayerID(room.players, playerID);
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
