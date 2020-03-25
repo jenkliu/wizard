@@ -36,7 +36,7 @@ export default class PlayerHandScreen extends React.Component {
 		super(props);
 		let cardIdsToCards = {};
 		sortCards(props.cards).forEach((card, i) => {
-			cardIdsToCards[i] = { id: i, ...card };
+			cardIdsToCards[card.id] = card;
 		});
 
 		this.state = {
