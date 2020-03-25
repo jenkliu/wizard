@@ -74,7 +74,10 @@ export default class GameplayScreen extends React.Component {
           )}
         </div>
 
-        <div className="player-name">{player.name}</div>
+        <div className="player-name">
+          {player._id === this.props.leadPlayerId ? '🧙‍♂️ ' : null}
+          {player.name}
+        </div>
         <div className="bid">
           Bid: {this.props.playerIdToBids[player._id] != null ? this.props.playerIdToBids[player._id] : '-'}
         </div>
@@ -105,5 +108,6 @@ GameplayScreen.propTypes = {
   currTrick: PropTypes.object, // {cardsPlayed: {playerId: card}}
   startTrick: PropTypes.func.isRequired,
   currRoundState: PropTypes.string.isRequired, // 'bid' || 'play'
-  activePlayerId: PropTypes.string.isRequired
+  activePlayerId: PropTypes.string.isRequired,
+  leadPlayerId: PropTypes.string.isRequired
 };

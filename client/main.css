@@ -153,6 +153,7 @@ input:focus {
   display: flex;
   margin-left: 30px;
   margin-bottom: 30px;
+  justify-content: center;
 }
 .player-hand .clickable-card:not(:last-child) .card-br {
   display: none;
