@@ -70,7 +70,11 @@ export default class PlayerHandScreen extends React.Component {
 	}
 
 	handleClickCard = card => {
-		this.setState({ activeCard: card });
+		if (this.state.activeCard && card.id === this.state.activeCard.id) {
+			this.setState({ activeCard: null });
+		} else {
+			this.setState({ activeCard: card });
+		}
 	};
 
 	handleClickPlayCard = () => {
