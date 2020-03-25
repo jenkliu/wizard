@@ -6,6 +6,10 @@ export default class WaitingRoomScreen extends React.Component {
 		return <p key={player._id}>{player.name}</p>;
 	}
 
+	roomHasPlayers() {
+		return this.props.players.length > 0;
+	}
+
 	render() {
 		return (
 			<div>
@@ -14,12 +18,12 @@ export default class WaitingRoomScreen extends React.Component {
 				<div className="players-list">
 					<h1>Players in this game:</h1>
 					<p>
-						{this.props.players.length > 0
+						{this.roomHasPlayers()
 							? this.props.players.map(player => this.renderPlayer(player))
 							: 'None yet. Join the game at wizard.dog using the code above!'}
 					</p>
 				</div>
-				<button className="btn" onClick={this.props.startGame}>
+				<button className="btn" disabled={!this.roomHasPlayers()} onClick={this.props.startGame}>
 					Start game
 				</button>
 			</div>

@@ -27,7 +27,7 @@ export default class PlayerJoinScreen extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>w i z a r d s</h1>
+				<h1 className="wizards-title">w i z a r d s</h1>
 				<div>
 					<input placeholder="Enter game code" value={this.state.gameCode} onChange={this.handleChangeGameCode} />
 				</div>

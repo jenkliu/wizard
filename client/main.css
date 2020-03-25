@@ -1,18 +1,25 @@
+* {
+  font-family: 'Quicksand', sans-serif;
+}
+.wizards-title {
+  font-size: 50px;
+}
 body {
   padding: 10px;
   font-family: sans-serif;
+  font-family: 'Quicksand', sans-serif;
 }
 .btn {
   width: 300px;
   height: 50px;
-  background-color: #2f7353;
+  background-color: #2f73b7;
   border-radius: 5px;
   color: #fff;
   font-size: 28px;
   cursor: pointer;
   padding-left: 40px;
   padding-right: 40px;
-  border: 1px solid #2f7353;
+  border: 1px solid #2f73b7;
 }
 .btn.inline {
   width: auto;
@@ -29,7 +36,8 @@ body {
   padding-top: 100px;
 }
 img {
-  margin: 30px 0;
+  margin-bottom: 25px;
+  width: 200px;
 }
 .players-list {
   margin-bottom: 50px;
@@ -40,6 +48,8 @@ img {
   font-weight: bold;
   border: 1px solid #000;
   padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
 }
 .player-bid {
   display: flex;
@@ -106,14 +116,18 @@ img {
   margin: 20px;
 }
 input {
-  width: 280px;
+  width: 270px;
   height: 50px;
   margin-bottom: 15px;
-  padding: 0 10px;
-  font-size: 28px;
+  padding: 0 15px;
+  font-size: 24px;
   border-radius: 5px;
   box-shadow: none;
   border: 1px solid #ccc;
+}
+input:focus {
+  border: 1px solid #2f73b7;
+  outline: none;
 }
 .player-hand {
   display: flex;

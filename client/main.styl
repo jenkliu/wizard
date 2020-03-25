@@ -1,10 +1,19 @@
 //////////////////// GENERAL
 
-wizard_blue = rgb(47,115,83)
+wizard_blue = rgb(47,115,183)
+
+
+*
+	font-family 'Quicksand', sans-serif
+	
+
+.wizards-title
+	font-size 50px
 
 body
 	padding 10px
 	font-family sans-serif
+	font-family 'Quicksand', sans-serif
 
 .btn
 	width 300px
@@ -17,7 +26,7 @@ body
 	padding-left 40px
 	padding-right 40px
 	border 1px solid wizard_blue
-	
+
 	&.inline
 		width auto
 		margin-left 10px
@@ -35,7 +44,8 @@ body
 	padding-top 100px
 
 img
-	margin 30px 0
+	margin-bottom 25px
+	width 200px
 
 .players-list
 	margin-bottom 50px
@@ -46,6 +56,8 @@ img
 	font-weight bold
 	border 1px solid black
 	padding 20px
+	margin-bottom 30px
+	border-radius 8px
 	
 .player-bid
 	display flex
@@ -120,14 +132,18 @@ trick_display_size = 20px
 	
 
 input
-	width 280px
+	width 270px
 	height 50px
 	margin-bottom 15px
-	padding 0 10px
-	font-size 28px
+	padding 0 15px
+	font-size 24px
 	border-radius 5px
 	box-shadow none
 	border 1px solid #cccccc
+	
+	&:focus
+		border 1px solid wizard_blue
+		outline none
 
 card_overlap_width = 30px
 .player-hand
