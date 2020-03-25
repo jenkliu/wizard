@@ -61,7 +61,7 @@ export default class PlayerHandScreen extends React.Component {
 	renderBidInput() {
 		return (
 			<div>
-				<input placeholder="Enter your bid" value={this.state.bid} onChange={this.handleChangeBid} />
+				<input className="inline" placeholder="Enter your bid" value={this.state.bid} onChange={this.handleChangeBid} />
 				<button className="btn inline" onClick={this.handleSubmitBid}>
 					Submit
 				</button>

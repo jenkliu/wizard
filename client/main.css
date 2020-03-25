@@ -20,8 +20,8 @@ h1 {
   color: #fff;
   font-size: 28px;
   cursor: pointer;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 30px;
+  padding-right: 30px;
   border: 1px solid #2f73b7;
 }
 .btn.inline {
@@ -169,6 +169,9 @@ input {
   box-shadow: none;
   border: 1px solid #ccc;
 }
+input.inline {
+  width: 150px;
+}
 input:focus {
   border: 1px solid #2f73b7;
   outline: none;
@@ -198,5 +201,8 @@ input:focus {
 .status {
   font-size: 24px;
   height: 24px;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
+}
+.player-hand {
+  margin-bottom: 50px;
 }
