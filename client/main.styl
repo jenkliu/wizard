@@ -15,6 +15,9 @@ body
 	font-family sans-serif
 	font-family 'Quicksand', sans-serif
 
+h1
+	margin-bottom 50px
+
 .btn
 	width 300px
 	height 50px
@@ -64,10 +67,31 @@ img
 	margin-bottom 30px
 	border-radius 8px
 	
+.scoreboard
+	display table
+	width 100%
+	margin-bottom 30px
+	font-size 24px
+
 .player-bid
-	display flex
-	justify-content space-between
+	display table-row
 	
+.scoreboard-player-name
+	width 60%
+	text-align left
+
+.scoreboard-player-name
+.round-score
+.total-score
+	display table-cell
+	padding-bottom 20px
+	
+.round-score.met
+	color green
+	
+.round-score.missed
+	color red
+
 .trump-card
 	display flex
 	align-items center
@@ -78,9 +102,6 @@ img
 	p
 		flex-grow 1
 		width 100%
-
-.gameplay-title
-	margin-bottom 50px
 
 .player-cards-container
 	display flex
@@ -107,7 +128,7 @@ img
 	display flex
 	
 	&.is-active
-		border 3px solid orange
+		border 3px dashed orange
 		
 	
 .active-player-indicator

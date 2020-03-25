@@ -9,6 +9,9 @@ body {
   font-family: sans-serif;
   font-family: 'Quicksand', sans-serif;
 }
+h1 {
+  margin-bottom: 50px;
+}
 .btn {
   width: 300px;
   height: 50px;
@@ -56,9 +59,30 @@ img {
   margin-bottom: 30px;
   border-radius: 8px;
 }
+.scoreboard {
+  display: table;
+  width: 100%;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
 .player-bid {
-  display: flex;
-  justify-content: space-between;
+  display: table-row;
+}
+.scoreboard-player-name {
+  width: 60%;
+  text-align: left;
+}
+.scoreboard-player-name,
+.round-score,
+.total-score {
+  display: table-cell;
+  padding-bottom: 20px;
+}
+.round-score.met {
+  color: #008000;
+}
+.round-score.missed {
+  color: #f00;
 }
 .trump-card {
   display: flex;
@@ -70,9 +94,6 @@ img {
 .trump-card p {
   flex-grow: 1;
   width: 100%;
-}
-.gameplay-title {
-  margin-bottom: 50px;
 }
 .player-cards-container {
   display: flex;
@@ -98,7 +119,7 @@ img {
   display: flex;
 }
 .placeholder-card.is-active {
-  border: 3px solid #ffa500;
+  border: 3px dashed #ffa500;
 }
 .active-player-indicator {
   justify-content: center;

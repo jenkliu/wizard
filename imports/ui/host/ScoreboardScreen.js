@@ -1,15 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
+import classNames from 'classnames';
 
 export default class ScoreboardScreen extends React.Component {
   renderPlayerScore(player) {
+    const roundScore = this.props.currRoundPlayerIdToScores[player._id];
+    const totalScore = this.props.totalPlayerIdToScores[player._id];
+    const roundScoreClasses = classNames('round-score', { met: roundScore > 0, missed: roundScore < 0 });
     return (
       <div className="player-bid" key={player._id}>
         <div className="player-name">{player.name}</div>
-
-        <div className="round-score">{this.props.currRoundPlayerIdToScores[player._id]}</div>
-        <div className="total-score">{this.props.totalPlayerIdToScores[player._id]}</div>
+        <div className={roundScoreClasses}>{`${roundScore > 0 ? '+' : ''}${roundScore}`}</div>
+        <div className="total-score">{totalScore}</div>
       </div>
     );
   }
@@ -17,9 +20,8 @@ export default class ScoreboardScreen extends React.Component {
   render() {
     return (
       <div>
-        <h1>Scores</h1>
-        {this.props.players.map(player => this.renderPlayerScore(player))}
-
+        <h1>Scoreboard</h1>
+        <div className="scoreboard">{this.props.players.map(player => this.renderPlayerScore(player))}</div>
         <button class="btn" onClick={this.props.startNextRound}>
           Start next round
         </button>
