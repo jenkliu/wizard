@@ -112,7 +112,7 @@ GameplayScreen.propTypes = {
   currTrick: PropTypes.object, // {cardsPlayed: {playerId: card}}
   startTrick: PropTypes.func.isRequired,
   currRoundState: PropTypes.string.isRequired, // 'bid' || 'play'
-  activePlayerId: PropTypes.string.isRequired,
-  leadPlayerId: PropTypes.string.isRequired,
+  activePlayerId: PropTypes.string,
+  leadPlayerId: PropTypes.string,
   gameCode: PropTypes.string.isRequired
 };

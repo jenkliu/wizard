@@ -22,7 +22,7 @@ export default class ScoreboardScreen extends React.Component {
       <div>
         <h1>Scoreboard</h1>
         <div className="scoreboard">{this.props.players.map(player => this.renderPlayerScore(player))}</div>
-        <button class="btn" onClick={this.props.startNextRound}>
+        <button className="btn" onClick={this.props.startNextRound}>
           Start next round
         </button>
       </div>
