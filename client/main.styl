@@ -33,6 +33,11 @@ body
 	
 	&:disabled
 		background-color gray
+		border 1px solid gray
+		
+	&:focus
+		outline none
+		background-color darken(wizard_blue, 30%)
 
 ////////////////////// HOST
 
@@ -41,7 +46,7 @@ body
 	align-items center
 	justify-content center
 	text-align center
-	padding-top 100px
+	padding-top 80px
 
 img
 	margin-bottom 25px
@@ -61,35 +66,45 @@ img
 	
 .player-bid
 	display flex
-	// width 25%
 	justify-content space-between
 	
 .trump-card
 	display flex
 	align-items center
 	justify-content center
-	margin-bottom 40px
+	margin-bottom 30px
 	flex-wrap wrap
 	
 	p
 		flex-grow 1
 		width 100%
-	
+
+.gameplay-title
+	margin-bottom 50px
 
 .player-cards-container
 	display flex
 	justify-content space-between
 	
+.player-card-container
+	padding 0 30px
+	width 90px
+	display flex
+	flex-direction column
+	align-items center
+
+.player-card
+	margin-bottom 20px
+
 // copied from card.css	
 .placeholder-card
 	width 60px
 	height 100px
 	border-radius 8px
-	background-color #fff
+	background-color lighten(#eee, 70%)
 	border 1px dashed gray
 	padding 4px
 	display flex
-	margin-bottom 20px
 	
 .active-player-indicator
 	justify-content center
@@ -104,22 +119,27 @@ img
 			border 5px solid green		
 
 .bid
-	margin-bottom 10px
+	margin-bottom 20px
 
 trick_display_size = 20px
+extra_trick_color = darken(red, 20%)
+unmet_trick_color = lighten(wizard_blue, 70%)
 .trick
 	display inline-flex
 	width trick_display_size
 	height trick_display_size
 	border-radius trick_display_size
-	border 1px solid black
 	margin-right 5px
+	background-color unmet_trick_color
+	border 1px solid unmet_trick_color
 
 	&.met
-		background-color black
+		background-color wizard_blue
+		border 1px solid wizard_blue
 	
 	&.extra
-		background-color red
+		background-color extra_trick_color
+		border 1px solid extra_trick_color
 
 	////////////////////// PLAYER
 
@@ -171,4 +191,5 @@ card_overlap_width = 30px
 		
 .status
 	font-size 24px
+	height 24px
 	margin-bottom 30px

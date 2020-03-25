@@ -18,7 +18,6 @@ function sortCards(cards) {
 		Wizard: []
 	};
 	cards.forEach(card => {
-		console.log(card.type);
 		if (card.type === 'Standard') suitToCards[card.suit].push(card);
 		else specialTypesToCards[card.type].push(card);
 	});
@@ -41,13 +40,14 @@ export default class PlayerHandScreen extends React.Component {
 
 		this.state = {
 			bid: 0,
-			activeCardId: null,
+			activeCard: null,
 			cardIdsToCards
 		};
 	}
 
 	isMyTurn() {
-		return this.props.myPlayer._id === this.props.activePlayer._id;
+		const { myPlayer, activePlayer } = this.props;
+		return activePlayer && myPlayer._id === activePlayer._id;
 	}
 
 	handleSubmitBid = () => {
@@ -69,34 +69,29 @@ export default class PlayerHandScreen extends React.Component {
 		);
 	}
 
-	handleClickCard = id => {
-		this.setState({ activeCardId: id });
+	handleClickCard = card => {
+		this.setState({ activeCard: card });
 	};
 
 	handleClickPlayCard = () => {
-		console.log('clicked play card');
-		const cardPlayedId = this.state.activeCardId;
-		const card = this.state.cardIdsToCards[cardPlayedId];
+		const card = this.state.activeCard;
 		this.props
 			.playCard(this.props.myPlayer._id, card)
-			.then(didSucceed => {
-				const newCardIdsToCards = this.state.cardIdsToCards;
-				delete newCardIdsToCards[cardPlayedId];
-				this.setState({ cardIdsToCards: newCardIdsToCards });
+			.then(data => {
+				this.setState({ activeCard: null });
 			})
 			.catch(err => alert(err));
 	};
 
 	// TODO make these fan out/scrollable in a carousel
 	// TODO disable selection when it's not my turn
-	renderClickableCard(cardId) {
-		const card = this.state.cardIdsToCards[cardId];
+	renderClickableCard(card) {
 		return (
 			<ClickableCard
-				isActive={cardId === this.state.activeCardId}
+				isActive={this.state.activeCard && card.id === this.state.activeCard.id}
 				isClickable={this.isMyTurn() && this.props.currRoundState === 'play'}
-				onClick={this.handleClickCard.bind(this, cardId)}
-				key={cardId}
+				onClick={this.handleClickCard.bind(this, card)}
+				key={card.id}
 				suit={card.suit}
 				value={card.value}
 				type={card.type}
@@ -105,18 +100,26 @@ export default class PlayerHandScreen extends React.Component {
 	}
 
 	renderStatus() {
-		if (this.props.currRoundState === 'bid') {
+		const { activePlayer, currRoundState, trickWinner, myPlayer } = this.props;
+		if (currRoundState === 'bid') {
 			if (this.isMyTurn()) {
 				return 'Your turn to bid!';
-			} else {
-				return `Waiting for ${this.props.activePlayer.name} to bid...`;
+			} else if (activePlayer) {
+				return `Waiting for ${activePlayer.name} to bid...`;
 			}
 		} else {
 			// play state
 			if (this.isMyTurn()) {
 				return 'Your turn!';
-			} else {
-				return `${this.props.activePlayer.name}'s turn`;
+			} else if (activePlayer) {
+				return `${activePlayer.name}'s turn`;
+			} else if (trickWinner) {
+				console.log('trickWinner is', trickWinner);
+				if (trickWinner._id === myPlayer._id) {
+					return 'You won the trick!';
+				} else {
+					return `${trickWinner.name} won the trick!`;
+				}
 			}
 		}
 	}
@@ -127,7 +130,7 @@ export default class PlayerHandScreen extends React.Component {
 			return this.renderBidInput();
 		} else {
 			return (
-				<button disabled={this.state.activeCardId === null} className="btn" onClick={this.handleClickPlayCard}>
+				<button disabled={this.state.activeCard === null} className="btn" onClick={this.handleClickPlayCard}>
 					Play card
 				</button>
 			);
@@ -138,9 +141,7 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<div>
 				<div className="status">{this.renderStatus()}</div>
-				<div className="player-hand">
-					{Object.keys(this.state.cardIdsToCards).map(cardId => this.renderClickableCard(cardId))}
-				</div>
+				<div className="player-hand">{sortCards(this.props.cards).map(card => this.renderClickableCard(card))}</div>
 				{this.isMyTurn() ? this.renderCta() : null}
 			</div>
 		);
@@ -153,5 +154,6 @@ PlayerHandScreen.propTypes = {
 	activePlayer: PropTypes.object,
 	currRoundState: PropTypes.string, // 'bid' | 'play' | 'finished'
 	submitBid: PropTypes.func,
-	playCard: PropTypes.func
+	playCard: PropTypes.func,
+	trickWinner: PropTypes.object
 };

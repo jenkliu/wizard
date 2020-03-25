@@ -27,13 +27,18 @@ body {
 }
 .btn:disabled {
   background-color: #808080;
+  border: 1px solid #808080;
+}
+.btn:focus {
+  outline: none;
+  background-color: #215080;
 }
 .host-app-container {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-top: 100px;
+  padding-top: 80px;
 }
 img {
   margin-bottom: 25px;
@@ -59,26 +64,38 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   flex-wrap: wrap;
 }
 .trump-card p {
   flex-grow: 1;
   width: 100%;
 }
+.gameplay-title {
+  margin-bottom: 50px;
+}
 .player-cards-container {
   display: flex;
   justify-content: space-between;
+}
+.player-card-container {
+  padding: 0 30px;
+  width: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.player-card {
+  margin-bottom: 20px;
 }
 .placeholder-card {
   width: 60px;
   height: 100px;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #fafafa;
   border: 1px dashed #808080;
   padding: 4px;
   display: flex;
-  margin-bottom: 20px;
 }
 .active-player-indicator {
   justify-content: center;
@@ -92,21 +109,24 @@ img {
   border: 5px solid #008000;
 }
 .bid {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .trick {
   display: inline-flex;
   width: 20px;
   height: 20px;
   border-radius: 20px;
-  border: 1px solid #000;
   margin-right: 5px;
+  background-color: #bcd5ee;
+  border: 1px solid #bcd5ee;
 }
 .trick.met {
-  background-color: #000;
+  background-color: #2f73b7;
+  border: 1px solid #2f73b7;
 }
 .trick.extra {
-  background-color: #f00;
+  background-color: #c00;
+  border: 1px solid #c00;
 }
 .player-app-container {
   display: flex;
@@ -152,5 +172,6 @@ input:focus {
 }
 .status {
   font-size: 24px;
+  height: 24px;
   margin-bottom: 30px;
 }

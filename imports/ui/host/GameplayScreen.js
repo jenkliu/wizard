@@ -76,7 +76,7 @@ export default class GameplayScreen extends React.Component {
 
         <div className="player-name">{player.name}</div>
         <div className="bid">
-          Bid: {this.props.playerIdToBids[player._id] != null ? this.props.playerIdToBids[player._id] : '?'}
+          Bid: {this.props.playerIdToBids[player._id] != null ? this.props.playerIdToBids[player._id] : '-'}
         </div>
         {this.renderTricks(player)}
       </div>
@@ -87,7 +87,7 @@ export default class GameplayScreen extends React.Component {
     const title = this.props.currRoundState === 'bid' ? 'Time to bid' : 'Game on!';
     return (
       <div>
-        <h1>{title}</h1>
+        <h1 className="gameplay-title">{title}</h1>
         <div className="trump-card">
           <Card value={this.props.trumpCard.value} suit={this.props.trumpCard.suit} type={this.props.trumpCard.type} />
           <p>Trump</p>

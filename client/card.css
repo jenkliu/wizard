@@ -47,6 +47,7 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
   transform: rotate(-180deg);
+  align-items: flex-start;
 }
 
 input[type='button'] {

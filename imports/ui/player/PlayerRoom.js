@@ -67,19 +67,21 @@ class PlayerRoom extends React.Component {
 	}
 
 	render() {
-		if (this.props.room.currRound && this.props.room.currRound.state === 'finished') {
+		const { room, myPlayer } = this.props;
+		if (room.currRound && room.currRound.state === 'finished') {
 			return <div>Round complete!</div>;
 		}
 
-		if (this.props.room.state === 'active' && this.hasInitializedHand()) {
+		if (room.state === 'active' && this.hasInitializedHand()) {
 			return (
 				<PlayerHandScreen
-					cards={this.props.room.currRound.playerIDsToCards[this.props.myPlayer._id]}
-					currRoundState={this.props.room.currRound.state}
-					myPlayer={this.props.myPlayer}
-					activePlayer={getPlayerById(this.props.room.currRound.activePlayerID)}
+					cards={room.currRound.playerIDsToCards[myPlayer._id]}
+					currRoundState={room.currRound.state}
+					myPlayer={myPlayer}
+					activePlayer={getPlayerById(room.currRound.activePlayerID)}
 					submitBid={this.submitBid}
 					playCard={this.playCard}
+					trickWinner={room.currRound.currTrick ? getPlayerById(room.currRound.currTrick.winningPlayerID) : null}
 				/>
 			);
 		}
@@ -99,9 +101,7 @@ export default withTracker(({ myPlayerId }) => {
 
 	Meteor.subscribe('rooms');
 	const room = RoomsCollection.findOne({ _id: roomId });
-	console.log('ROOM', room);
 
-	// Meteor.subscribe('players');
 	return {
 		room,
 		myPlayer
