@@ -89,7 +89,11 @@ export default class GameplayScreen extends React.Component {
   render() {
     const title = this.props.currRoundState === 'bid' ? 'Time to bid' : 'Game on!';
     return (
-      <div>
+      <div className="gameplay-screen">
+        <div className="gameplay-gamecode">
+          GAME CODE: <br />
+          {this.props.gameCode}
+        </div>
         <h1 className="gameplay-title">{title}</h1>
         <div className="trump-card">
           <Card value={this.props.trumpCard.value} suit={this.props.trumpCard.suit} type={this.props.trumpCard.type} />
@@ -109,5 +113,6 @@ GameplayScreen.propTypes = {
   startTrick: PropTypes.func.isRequired,
   currRoundState: PropTypes.string.isRequired, // 'bid' || 'play'
   activePlayerId: PropTypes.string.isRequired,
-  leadPlayerId: PropTypes.string.isRequired
+  leadPlayerId: PropTypes.string.isRequired,
+  gameCode: PropTypes.string.isRequired
 };

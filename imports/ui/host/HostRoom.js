@@ -66,6 +66,7 @@ class HostRoom extends React.Component {
 					currRoundState={room.currRound.state}
 					activePlayerId={room.currRound.activePlayerID}
 					leadPlayerId={room.currRound.currTrick ? room.currRound.currTrick.leadPlayerID : null}
+					gameCode={room.code}
 				/>
 			);
 		}

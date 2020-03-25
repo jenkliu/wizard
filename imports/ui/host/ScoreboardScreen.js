@@ -10,7 +10,7 @@ export default class ScoreboardScreen extends React.Component {
     const roundScoreClasses = classNames('round-score', { met: roundScore > 0, missed: roundScore < 0 });
     return (
       <div className="player-bid" key={player._id}>
-        <div className="player-name">{player.name}</div>
+        <div className="scoreboard-player-name">{player.name}</div>
         <div className={roundScoreClasses}>{`${roundScore > 0 ? '+' : ''}${roundScore}`}</div>
         <div className="total-score">{totalScore}</div>
       </div>

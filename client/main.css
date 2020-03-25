@@ -5,7 +5,6 @@
   font-size: 50px;
 }
 body {
-  padding: 10px;
   font-family: sans-serif;
   font-family: 'Quicksand', sans-serif;
 }
@@ -58,6 +57,12 @@ img {
   padding: 20px;
   margin-bottom: 30px;
   border-radius: 8px;
+}
+.gameplay-gamecode {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  text-align: right;
 }
 .scoreboard {
   display: table;
@@ -157,7 +162,7 @@ img {
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin: 20px;
+  margin: 50px 20px;
 }
 input {
   width: 270px;
