@@ -97,6 +97,9 @@ img {
   padding: 4px;
   display: flex;
 }
+.placeholder-card.is-active {
+  border: 3px solid #ffa500;
+}
 .active-player-indicator {
   justify-content: center;
   align-items: center;

@@ -68,9 +68,9 @@ export default class GameplayScreen extends React.Component {
           {cardPlayed ? (
             <Card value={cardPlayed.value} suit={cardPlayed.suit} type={cardPlayed.type} />
           ) : (
-            <div className="placeholder-card">
-              {player._id === this.props.activePlayerId ? <span className="active-player-indicator">★</span> : null}
-            </div>
+            <div
+              className={classNames('placeholder-card', { 'is-active': player._id === this.props.activePlayerId })}
+            />
           )}
         </div>
 
