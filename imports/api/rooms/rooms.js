@@ -191,7 +191,8 @@ Meteor.methods({
           playerIDsToCards: {},
           trumpCard: null,
           tricks: [],
-          currTrick: null
+          currTrick: null,
+          forbiddenBid: null,
         }
       }
     });
@@ -249,23 +250,33 @@ Meteor.methods({
       throw new Meteor.Error('action taken by non-active player');
     }
 
-    currRound = room.currRound;
-    currRound.playerIDsToBids[playerID] = bid;
-
-    bidValues = Object.values(currRound.playerIDsToBids);
-    bidSum = bidValues.reduce(function(acc, i) { return acc + i;}, 0);
-    if (currRound.numTricks >= 4 && bidValues.length == room.players.length && bidSum == currRound.numTricks) {
+    if (bid == room.currRound.forbiddenBid) {
       throw new Meteor.Error('cannot bid ' + bid)
     }
 
+    currRound = room.currRound;
+    currRound.playerIDsToBids[playerID] = bid;
+
+    // If there is one null bid left (and there are >3 tricks), set forbiddenBid
+    // to the number of remaining tricks. Otherwise, ensure it's null.
+    bidValues = Object.values(currRound.playerIDsToBids).filter(function(bid) {
+      return !(bid == null);
+    });
+    bidSum = bidValues.reduce(function(acc, i) { return acc + i;}, 0);
+    if (currRound.numTricks >= 4 && bidValues.length == room.players.length - 1) {
+      currRound.forbiddenBid = currRound.numTricks - bidSum;
+    } else {
+      currRound.forbiddenBid = null;
+    }
+
     currRound.activePlayerID = getNextPlayerID(room.players, playerID);
+
     RoomsCollection.update(roomID, {
       $set: { currRound: currRound }
     });
     return currRound.playerIDsToBids;
   },
   'rooms.rounds.beginPlay'(roomID) {
-    // todo: throw error if the bids aren't in yet
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
     for ([playerID, bid] of Object.entries(room.currRound.playerIDsToBids)) {
