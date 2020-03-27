@@ -85,7 +85,6 @@ export function getPlayerIDsToScores(round) {
     throw new Meteor.Error('cannot compute the score of an unfinished round');
   }
 
-  // todo: throw error if the round hasn't ended
   playerIDs = Object.keys(round.playerIDsToBids);
   playerIDsToTricksTaken = {};
   playerIDsToScores = {};
@@ -246,19 +245,27 @@ Meteor.methods({
     });
   },
   'rooms.rounds.updateBid'(roomID, playerID, bid) {
-    // TODO: throw error if we haven't dealt yet
-
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+    currRound = room.currRound;
 
-    if (playerID != room.currRound.activePlayerID) {
+    if (currRound.state != 'bid') {
+      throw new Meteor.Error('round is not in the bidding phase');
+    }
+
+    for (player of room.players) {
+      if (currRound.playerIDsToCards[player._id].length != currRound.numTricks) {
+        throw new Meteor.Error(player.name + ' does not have a full hand');
+      }
+    }
+
+    if (playerID != currRound.activePlayerID) {
       throw new Meteor.Error('action taken by non-active player');
     }
 
-    if (bid == room.currRound.forbiddenBid) {
+    if (bid == currRound.forbiddenBid) {
       throw new Meteor.Error('cannot bid ' + bid)
     }
 
-    currRound = room.currRound;
     currRound.playerIDsToBids[playerID] = bid;
 
     // If there is one null bid left (and there are >3 tricks), set forbiddenBid
@@ -320,6 +327,10 @@ Meteor.methods({
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
 
+    if (currRound == null || currRound.state != 'play') {
+      throw new Meteor.Error('you cannot start a trick unless the room state is play');
+    }
+
     // Update historical tricks array
     if (currRound.currTrick) {
       currRound.activePlayerID = currRound.currTrick.winningPlayerID;
@@ -344,6 +355,10 @@ Meteor.methods({
   'rooms.tricks.playCard'(roomID, playerID, card) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
+
+    if (currRound == null || currRound.state != 'play') {
+      throw new Meteor.Error('you cannot play a card unless the room state is play');
+    }
 
     if (playerID != room.currRound.activePlayerID) {
       throw new Meteor.Error('action taken by non-active player');
@@ -411,6 +426,8 @@ Meteor.methods({
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
     currRound = room.currRound;
 
+    // todo: ensure that all tricks have been played
+
     // Clean up the last trick
     if (currRound.currTrick) {
       currRound.activePlayerID = currRound.currTrick.winningPlayerID;
@@ -426,6 +443,8 @@ Meteor.methods({
   },
   'rooms.finish'(roomID) {
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+
+    // todo: if the current round isn't finished, just drop it
 
     // Clean up the last round
     rounds = room.rounds;
