@@ -277,7 +277,6 @@ Meteor.methods({
     return currRound.playerIDsToBids;
   },
   'rooms.rounds.beginPlay'(roomID) {
-    // todo: throw error if the bids aren't in yet
     room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
     for ([playerID, bid] of Object.entries(room.currRound.playerIDsToBids)) {
