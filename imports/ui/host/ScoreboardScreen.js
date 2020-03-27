@@ -4,13 +4,20 @@ import { withTracker } from 'meteor/react-meteor-data';
 import classNames from 'classnames';
 
 export default class ScoreboardScreen extends React.Component {
-  renderPlayerScore(player) {
+  sortPlayersByTotalScore(players) {
+    const sortFn = (player1, player2) => {
+      return this.props.totalPlayerIdToScores[player2._id] - this.props.totalPlayerIdToScores[player1._id];
+    };
+    return players.sort(sortFn);
+  }
+
+  renderPlayerScore(player, rank) {
     const roundScore = this.props.currRoundPlayerIdToScores[player._id];
     const totalScore = this.props.totalPlayerIdToScores[player._id];
     const roundScoreClasses = classNames('round-score', { met: roundScore > 0, missed: roundScore < 0 });
     return (
       <div className="player-bid" key={player._id}>
-        <div className="scoreboard-player-name">{player.name}</div>
+        <div className="scoreboard-player-name">{`${rank}. ${player.name}`}</div>
         <div className={roundScoreClasses}>{`${roundScore > 0 ? '+' : ''}${roundScore}`}</div>
         <div className="total-score">{totalScore}</div>
       </div>
@@ -21,7 +28,9 @@ export default class ScoreboardScreen extends React.Component {
     return (
       <div>
         <h1>Scoreboard</h1>
-        <div className="scoreboard">{this.props.players.map(player => this.renderPlayerScore(player))}</div>
+        <div className="scoreboard">
+          {this.sortPlayersByTotalScore(this.props.players).map((player, i) => this.renderPlayerScore(player, i + 1))}
+        </div>
         <button className="btn" onClick={this.props.startNextRound}>
           Start next round
         </button>

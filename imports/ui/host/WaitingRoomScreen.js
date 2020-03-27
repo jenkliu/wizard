@@ -16,7 +16,7 @@ export default class WaitingRoomScreen extends React.Component {
 				<h1> Game code</h1>
 				<div className="game-code">{this.props.code}</div>
 				<div className="players-list">
-					<h1>Players joined:</h1>
+					<h1>Players joined</h1>
 					<p>
 						{this.roomHasPlayers()
 							? this.props.players.map(player => this.renderPlayer(player))
