@@ -8,6 +8,22 @@ import { PlayersCollection } from '../players/players.js'
 if (Meteor.isServer) {
   describe('Rooms', () => {
     describe('scores rounds properly', () => {
+      it('refuses to score an unfinished round', () => {
+        assert.throws(() => {
+          getPlayerIDsToScores({
+            state: 'play',
+            playerIDsToBids: {a: 2, b: 1, c: 1},
+            numTricks: 5,
+            tricks: [
+              {winningPlayerID: 'a'},
+              {winningPlayerID: 'a'},
+              {winningPlayerID: 'b'},
+              {winningPlayerID: 'c'},
+            ]
+          });
+        }, Meteor.Error, 'cannot compute the score of an unfinished round');
+      });
+
       it('standard round, player c busts', () => {
         scores = getPlayerIDsToScores({
           state: 'finished',
@@ -379,6 +395,10 @@ if (Meteor.isServer) {
           Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
         }, Meteor.Error, 'action taken by non-active player');
 
+        assert.throws(() => {
+          Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
+        }, Meteor.Error, 'action taken by non-active player');
+
         Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
 
         assert.throws(() => {
@@ -516,6 +536,57 @@ if (Meteor.isServer) {
         Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
         Meteor.call('rooms.rounds.beginPlay', roomID);
         Meteor.call('rooms.tricks.start', roomID);
+      });
+
+      it('yell at people who try to play a trick in the wrong phase', () => {
+        roomID = Meteor.call('rooms.create');
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        deanID = Meteor.call('players.get_or_create', 'Dean', 'AAA', room.code);
+        jenniferID = Meteor.call('players.get_or_create', 'Jennifer', 'BBB', room.code);
+        Meteor.call('rooms.addPlayer', deanID);
+        Meteor.call('rooms.addPlayer', jenniferID);
+        Meteor.call('rooms.start', roomID);
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        player1ID = room.players[0]._id
+        player2ID = room.players[1]._id
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.start', roomID);
+        }, Meteor.Error, 'you cannot start a trick unless the room state is play');
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+        }, Meteor.Error, 'you cannot play a card unless the room state is play');
+
+        Meteor.call('rooms.rounds.start', roomID);
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.start', roomID);
+        }, Meteor.Error, 'you cannot start a trick unless the room state is play');
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+        }, Meteor.Error, 'you cannot play a card unless the room state is play');
+
+        Meteor.call('rooms.rounds.deal', roomID);
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.start', roomID);
+        }, Meteor.Error, 'you cannot start a trick unless the room state is play');
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+        }, Meteor.Error, 'you cannot play a card unless the room state is play');
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
+
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.start', roomID);
+        }, Meteor.Error, 'you cannot start a trick unless the room state is play');
+        assert.throws(() => {
+          Meteor.call('rooms.tricks.playCard', roomID, player1ID, wizardCard1);
+        }, Meteor.Error, 'you cannot play a card unless the room state is play');
+
+        Meteor.call('rooms.rounds.beginPlay', roomID);
       });
 
       it('yell at people who play out of turn', () => {
