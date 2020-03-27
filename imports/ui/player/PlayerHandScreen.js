@@ -68,13 +68,11 @@ export default class PlayerHandScreen extends React.Component {
 					value={this.state.bid}
 					onChange={this.handleChangeBid}
 				/>
-				<button
-					className="btn inline"
-					disabled={!this.isMyTurn() || this.state.bid === ''}
-					onClick={this.handleSubmitBid}
-				>
-					Submit
-				</button>
+				{this.isMyTurn() ? (
+					<button className="btn inline" disabled={this.state.bid === ''} onClick={this.handleSubmitBid}>
+						Submit
+					</button>
+				) : null}
 				{this.props.forbiddenBid && this.isMyTurn() ? (
 					<p className="bid-note">Can't bid {this.props.forbiddenBid}</p>
 				) : null}
@@ -144,17 +142,14 @@ export default class PlayerHandScreen extends React.Component {
 	renderCta() {
 		if (this.props.currRoundState === 'bid') {
 			return this.renderBidInput();
-		} else {
+		} else if (this.isMyTurn()) {
 			return (
-				<button
-					disabled={!this.isMyTurn() || this.state.activeCard === null}
-					className="btn"
-					onClick={this.handleClickPlayCard}
-				>
+				<button disabled={this.state.activeCard === null} className="btn" onClick={this.handleClickPlayCard}>
 					Play card
 				</button>
 			);
 		}
+		return null;
 	}
 
 	render() {
