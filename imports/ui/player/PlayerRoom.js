@@ -7,7 +7,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PlayerJoinScreen from './PlayerJoinScreen';
 import PlayerWaitingScreen from './PlayerWaitingScreen';
 import PlayerHandScreen from './PlayerHandScreen';
-import NoSleep from 'nosleep.js';
+import noSleep from 'nosleep.js';
 
 const getPlayerById = playerId => {
 	return PlayersCollection.findOne({ _id: playerId });
