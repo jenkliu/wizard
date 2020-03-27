@@ -39,7 +39,7 @@ export default class PlayerHandScreen extends React.Component {
 		});
 
 		this.state = {
-			bid: 0,
+			bid: null,
 			activeCard: null,
 			cardIdsToCards
 		};
@@ -61,7 +61,13 @@ export default class PlayerHandScreen extends React.Component {
 	renderBidInput() {
 		return (
 			<div>
-				<input className="inline" placeholder="Enter your bid" value={this.state.bid} onChange={this.handleChangeBid} />
+				<input
+					autofocus="true"
+					className="inline"
+					placeholder="Enter your bid"
+					value={this.state.bid}
+					onChange={this.handleChangeBid}
+				/>
 				<button className="btn inline" onClick={this.handleSubmitBid}>
 					Submit
 				</button>
