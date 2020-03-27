@@ -176,7 +176,7 @@ input {
   border: 1px solid #ccc;
 }
 input.inline {
-  width: 150px;
+  width: 170px;
 }
 input:focus {
   border: 1px solid #2f73b7;

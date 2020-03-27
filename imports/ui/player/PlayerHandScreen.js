@@ -39,7 +39,7 @@ export default class PlayerHandScreen extends React.Component {
 		});
 
 		this.state = {
-			bid: null,
+			bid: '',
 			activeCard: null,
 			cardIdsToCards
 		};
@@ -62,13 +62,17 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<div>
 				<input
-					autofocus="true"
+					autoFocus="true"
 					className="inline"
 					placeholder="Enter your bid"
 					value={this.state.bid}
 					onChange={this.handleChangeBid}
 				/>
-				<button className="btn inline" onClick={this.handleSubmitBid}>
+				<button
+					className="btn inline"
+					disabled={!this.isMyTurn() || this.state.bid === ''}
+					onClick={this.handleSubmitBid}
+				>
 					Submit
 				</button>
 				{this.props.forbiddenBid ? <p className="bid-note">Can't bid {this.props.forbiddenBid}</p> : null}
@@ -100,7 +104,7 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<ClickableCard
 				isActive={this.state.activeCard && card.id === this.state.activeCard.id}
-				isClickable={this.isMyTurn() && this.props.currRoundState === 'play'}
+				isClickable={this.props.currRoundState === 'play'}
 				onClick={this.handleClickCard.bind(this, card)}
 				key={card.id}
 				suit={card.suit}
@@ -136,12 +140,15 @@ export default class PlayerHandScreen extends React.Component {
 	}
 
 	renderCta() {
-		if (!this.isMyTurn() || this.props.cards.length === 0) return null;
 		if (this.props.currRoundState === 'bid') {
 			return this.renderBidInput();
 		} else {
 			return (
-				<button disabled={this.state.activeCard === null} className="btn" onClick={this.handleClickPlayCard}>
+				<button
+					disabled={!this.isMyTurn() || this.state.activeCard === null}
+					className="btn"
+					onClick={this.handleClickPlayCard}
+				>
 					Play card
 				</button>
 			);
@@ -153,7 +160,7 @@ export default class PlayerHandScreen extends React.Component {
 			<div>
 				<div className="status">{this.renderStatus()}</div>
 				<div className="player-hand">{sortCards(this.props.cards).map(card => this.renderClickableCard(card))}</div>
-				{this.isMyTurn() ? this.renderCta() : null}
+				{this.renderCta()}
 			</div>
 		);
 	}
