@@ -75,7 +75,9 @@ export default class PlayerHandScreen extends React.Component {
 				>
 					Submit
 				</button>
-				{this.props.forbiddenBid ? <p className="bid-note">Can't bid {this.props.forbiddenBid}</p> : null}
+				{this.props.forbiddenBid && this.isMyTurn() ? (
+					<p className="bid-note">Can't bid {this.props.forbiddenBid}</p>
+				) : null}
 			</div>
 		);
 	}
