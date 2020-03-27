@@ -77,10 +77,20 @@ class PlayerRoom extends React.Component {
 		return room.currRound && Object.keys(room.currRound.playerIDsToCards).length > 0;
 	}
 
+	getRoundCompleteStatus() {
+		const myBid = this.props.room.currRound.playerIDsToBids[this.props.myPlayer._id];
+		const myNumTricks = this.props.room.currRound.tricks.reduce((acc, trick) => {
+			if (trick.winningPlayerID === this.props.myPlayer._id) return acc + 1;
+			else return acc;
+		}, 0);
+		if (myBid == myNumTricks) return `Congrats, you met your bid of ${myBid}! 🎉`;
+		else return `You missed by ${myNumTricks - myBid} 😭 Better luck next round!`;
+	}
+
 	render() {
 		const { room, myPlayer } = this.props;
 		if (room.currRound && room.currRound.state === 'finished') {
-			return <div>Round complete!</div>;
+			return <div className="round-complete-status">{this.getRoundCompleteStatus()}</div>;
 		}
 
 		if (room.state === 'active' && this.hasInitializedHand()) {

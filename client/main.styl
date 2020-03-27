@@ -1,7 +1,7 @@
 //////////////////// GENERAL
 
 wizard_blue = rgb(47,115,183)
-
+success_green = rgb(50, 168, 82)
 
 *
 	font-family 'Quicksand', sans-serif
@@ -92,7 +92,7 @@ img
 	padding-bottom 20px
 	
 .round-score.met
-	color green
+	color success_green
 	
 .round-score.missed
 	color red
@@ -146,7 +146,7 @@ img
 	
 .card
 	.player-card.is-winner &
-			border 5px solid green		
+			border 5px solid success_green		
 
 .bid
 	margin-bottom 20px
@@ -223,7 +223,11 @@ card_overlap_width = 30px
 
 	&.is-clickable:hover
 		cursor pointer
-		
+
+.player-waiting-screen
+.round-complete-status
+	font-size 24px
+
 .status
 	font-size 24px
 	height 24px
