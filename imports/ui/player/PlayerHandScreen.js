@@ -45,6 +45,22 @@ export default class PlayerHandScreen extends React.Component {
 		};
 	}
 
+	focusIfMyTurn() {
+		if (this.props.activePlayer && this.props.activePlayer._id === this.props.myPlayer._id) {
+			console.log('my turn');
+			this._bidInput.focus({ preventScroll: true });
+		}
+	}
+
+	componentDidMount() {
+		this.focusIfMyTurn();
+	}
+
+	componentDidUpdate() {
+		console.log('activePlayer', this.props.activePlayer._id, this.props.myPlayer._id);
+		this.focusIfMyTurn();
+	}
+
 	isMyTurn() {
 		const { myPlayer, activePlayer } = this.props;
 		return activePlayer && myPlayer._id === activePlayer._id;
@@ -67,6 +83,7 @@ export default class PlayerHandScreen extends React.Component {
 					placeholder="Enter your bid"
 					value={this.state.bid}
 					onChange={this.handleChangeBid}
+					ref={c => (this._bidInput = c)}
 				/>
 				{this.isMyTurn() ? (
 					<button className="btn inline" disabled={this.state.bid === ''} onClick={this.handleSubmitBid}>
