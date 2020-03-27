@@ -386,10 +386,60 @@ if (Meteor.isServer) {
         }, Meteor.Error, 'action taken by non-active player');
       });
 
+      it('check the last-bidder restrictions in currRound', () => {
+        RoomsCollection.update(roomID, {
+          $set: { numTricksArr: [1, 7] }
+        });
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.forbiddenBid, null);
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.forbiddenBid, null);
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 1);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.forbiddenBid, null);
+
+        Meteor.call('rooms.rounds.beginPlay', roomID);
+
+        Meteor.call('rooms.tricks.start', roomID);
+        Meteor.call('rooms.tricks.playCard', roomID, player2ID,
+          room.currRound.playerIDsToCards[player2ID][0]);
+        Meteor.call('rooms.tricks.playCard', roomID, player1ID,
+          room.currRound.playerIDsToCards[player1ID][0]);
+        Meteor.call('rooms.tricks.finish', roomID);
+        Meteor.call('rooms.rounds.finish', roomID);
+
+        Meteor.call('rooms.rounds.start', roomID);
+        Meteor.call('rooms.rounds.deal', roomID);
+
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.forbiddenBid, null);
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 2);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.forbiddenBid, 5);
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 4);
+        room = RoomsCollection.find({ _id: roomID }).fetch()[0];
+        assert.equal(room.currRound.forbiddenBid, null);
+      });
+
       it('starting round 4, do not let the last person even-bid', () => {
         RoomsCollection.update(roomID, {
           $set: { numTricksArr: [1, 4] }
         });
+
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 0);
+        Meteor.call('rooms.rounds.beginPlay', roomID);
+        Meteor.call('rooms.tricks.start', roomID);
+        Meteor.call('rooms.tricks.playCard', roomID, player2ID,
+          room.currRound.playerIDsToCards[player2ID][0]);
+        Meteor.call('rooms.tricks.playCard', roomID, player1ID,
+          room.currRound.playerIDsToCards[player1ID][0]);
+        Meteor.call('rooms.tricks.finish', roomID);
+
 
         room = RoomsCollection.find({ _id: roomID }).fetch()[0];
 
@@ -397,13 +447,13 @@ if (Meteor.isServer) {
         Meteor.call('rooms.rounds.start', roomID);
         Meteor.call('rooms.rounds.deal', roomID);
 
-        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 0);
+        Meteor.call('rooms.rounds.updateBid', roomID, player1ID, 4);
 
         assert.throws(() => {
-          Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 4);
-        }, Meteor.Error, 'cannot bid 4');
+          Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 0);
+        }, Meteor.Error, 'cannot bid 0');
 
-        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 5);
+        Meteor.call('rooms.rounds.updateBid', roomID, player2ID, 1);
       });
 
       it('can\'t start a round unless everyone has bid', () => {
