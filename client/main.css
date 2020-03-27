@@ -3,6 +3,7 @@
 }
 .wizards-title {
   font-size: 50px;
+  margin-bottom: 30px;
 }
 body {
   font-family: sans-serif;
@@ -180,6 +181,9 @@ input.inline {
 input:focus {
   border: 1px solid #2f73b7;
   outline: none;
+}
+.host-link {
+  margin-top: 30px;
 }
 .player-hand {
   display: flex;

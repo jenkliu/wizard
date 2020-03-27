@@ -37,6 +37,9 @@ export default class PlayerJoinScreen extends React.Component {
 				<button className="btn" onClick={this.handleClickPlay}>
 					Play
 				</button>
+				<p className="host-link">
+					<a href="/host">Host a game</a>
+				</p>
 			</div>
 		);
 	}
