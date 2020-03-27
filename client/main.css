@@ -84,7 +84,7 @@ img {
   padding-bottom: 20px;
 }
 .round-score.met {
-  color: #008000;
+  color: #32a852;
 }
 .round-score.missed {
   color: #f00;
@@ -135,7 +135,7 @@ img {
   color: #ffa500;
 }
 .player-card.is-winner .card {
-  border: 5px solid #008000;
+  border: 5px solid #32a852;
 }
 .bid {
   margin-bottom: 20px;
@@ -203,6 +203,10 @@ input:focus {
 }
 .clickable-card.is-clickable:hover {
   cursor: pointer;
+}
+.player-waiting-screen,
+.round-complete-status {
+  font-size: 24px;
 }
 .status {
   font-size: 24px;
