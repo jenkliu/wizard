@@ -103,6 +103,7 @@ class PlayerRoom extends React.Component {
 					submitBid={this.submitBid}
 					playCard={this.playCard}
 					trickWinner={room.currRound.currTrick ? getPlayerById(room.currRound.currTrick.winningPlayerID) : null}
+					forbiddenBid={room.currRound.forbiddenBid}
 				/>
 			);
 		}

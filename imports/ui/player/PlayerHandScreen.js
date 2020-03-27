@@ -65,6 +65,7 @@ export default class PlayerHandScreen extends React.Component {
 				<button className="btn inline" onClick={this.handleSubmitBid}>
 					Submit
 				</button>
+				{this.props.forbiddenBid ? <p className="bid-note">Can't bid {this.props.forbiddenBid}</p> : null}
 			</div>
 		);
 	}
@@ -159,5 +160,6 @@ PlayerHandScreen.propTypes = {
 	currRoundState: PropTypes.string, // 'bid' | 'play' | 'finished'
 	submitBid: PropTypes.func,
 	playCard: PropTypes.func,
-	trickWinner: PropTypes.object
+	trickWinner: PropTypes.object,
+	forbiddenBid: PropTypes.number
 };
