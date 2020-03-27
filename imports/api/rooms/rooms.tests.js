@@ -8,6 +8,22 @@ import { PlayersCollection } from '../players/players.js'
 if (Meteor.isServer) {
   describe('Rooms', () => {
     describe('scores rounds properly', () => {
+      it('refuses to score an unfinished round', () => {
+        assert.throws(() => {
+          getPlayerIDsToScores({
+            state: 'play',
+            playerIDsToBids: {a: 2, b: 1, c: 1},
+            numTricks: 5,
+            tricks: [
+              {winningPlayerID: 'a'},
+              {winningPlayerID: 'a'},
+              {winningPlayerID: 'b'},
+              {winningPlayerID: 'c'},
+            ]
+          });
+        }, Meteor.Error, 'cannot compute the score of an unfinished round');
+      });
+
       it('standard round, player c busts', () => {
         scores = getPlayerIDsToScores({
           state: 'finished',

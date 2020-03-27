@@ -81,6 +81,10 @@ export function getWinningPlayerID(trickCards, leadCard, trumpCard, orderedPlaye
 }
 
 export function getPlayerIDsToScores(round) {
+  if (round.state != 'finished') {
+    throw new Meteor.Error('cannot compute the score of an unfinished round');
+  }
+
   // todo: throw error if the round hasn't ended
   playerIDs = Object.keys(round.playerIDsToBids);
   playerIDsToTricksTaken = {};
