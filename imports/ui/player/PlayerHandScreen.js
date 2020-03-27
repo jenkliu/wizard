@@ -62,7 +62,7 @@ export default class PlayerHandScreen extends React.Component {
 		return (
 			<div>
 				<input
-					autoFocus="true"
+					autoFocus={true}
 					className="inline"
 					placeholder="Enter your bid"
 					value={this.state.bid}
