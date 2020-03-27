@@ -7,6 +7,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PlayerJoinScreen from './PlayerJoinScreen';
 import PlayerWaitingScreen from './PlayerWaitingScreen';
 import PlayerHandScreen from './PlayerHandScreen';
+import NoSleep from 'nosleep.js';
 
 const getPlayerById = playerId => {
 	return PlayersCollection.findOne({ _id: playerId });
@@ -15,6 +16,16 @@ const getPlayerById = playerId => {
 class PlayerRoom extends React.Component {
 	constructor(props) {
 		super(props);
+
+		// keep screen alive on mobile web
+		document.addEventListener(
+			'touchstart',
+			function enableNoSleep() {
+				document.removeEventListener('touchstart', enableNoSleep, false);
+				noSleep.enable();
+			},
+			false
+		);
 	}
 
 	submitBid = (playerId, bid) => {
