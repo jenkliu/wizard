@@ -66,7 +66,7 @@ export default class PlayerHandScreen extends React.Component {
 	}
 
 	handleSubmitBid = () => {
-		this.props.submitBid(this.props.myPlayer._id, this.state.bid);
+		this.props.submitBid(this.props.myPlayer._id, parseInt(this.state.bid) || 0);
 	};
 
 	handleChangeBid = event => {
