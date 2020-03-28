@@ -7,7 +7,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PlayerJoinScreen from './PlayerJoinScreen';
 import PlayerWaitingScreen from './PlayerWaitingScreen';
 import PlayerHandScreen from './PlayerHandScreen';
-import noSleep from 'nosleep.js';
+import NoSleep from 'nosleep.js';
 
 const getPlayerById = playerId => {
 	return PlayersCollection.findOne({ _id: playerId });
@@ -16,7 +16,7 @@ const getPlayerById = playerId => {
 class PlayerRoom extends React.Component {
 	constructor(props) {
 		super(props);
-
+		const noSleep = new NoSleep();
 		// keep screen alive on mobile web
 		document.addEventListener(
 			'touchstart',
