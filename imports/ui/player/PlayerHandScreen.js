@@ -45,21 +45,20 @@ export default class PlayerHandScreen extends React.Component {
 		};
 	}
 
-	focusIfMyTurn() {
-		// if (this.props.activePlayer && this.props.activePlayer._id === this.props.myPlayer._id) {
-		// 	console.log('my turn');
-		// 	this._bidInput.focus({ preventScroll: true });
-		// }
-	}
+	// focusIfMyTurn() {
+	// 	// if (this.props.activePlayer && this.props.activePlayer._id === this.props.myPlayer._id) {
+	// 	// 	console.log('my turn');
+	// 	// 	this._bidInput.focus({ preventScroll: true });
+	// 	// }
+	// }
 
-	componentDidMount() {
-		this.focusIfMyTurn();
-	}
+	// componentDidMount() {
+	// 	this.focusIfMyTurn();
+	// }
 
-	componentDidUpdate() {
-		console.log('activePlayer', this.props.activePlayer._id, this.props.myPlayer._id);
-		this.focusIfMyTurn();
-	}
+	// componentDidUpdate() {
+	// 	this.focusIfMyTurn();
+	// }
 
 	isMyTurn() {
 		const { myPlayer, activePlayer } = this.props;
