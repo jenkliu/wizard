@@ -41,12 +41,19 @@ export default class PlayerHandScreen extends React.Component {
 		this.state = {
 			bid: '',
 			activeCard: null,
+			isPreMoveEnabled: false,
 			cardIdsToCards
 		};
 	}
 
-	isMyTurn() {
-		const { myPlayer, activePlayer } = this.props;
+	componentDidUpdate(prevProps) {
+		if (!this.isMyTurn(prevProps) && this.isMyTurn() && this.state.activeCard && this.state.isPreMoveEnabled) {
+			this.playCard();
+		}
+	}
+
+	isMyTurn(props = this.props) {
+		const { myPlayer, activePlayer } = props;
 		return activePlayer && myPlayer._id === activePlayer._id;
 	}
 
@@ -89,7 +96,8 @@ export default class PlayerHandScreen extends React.Component {
 		}
 	};
 
-	handleClickPlayCard = () => {
+	playCard = () => {
+		if (!this.state.activeCard) return;
 		const card = this.state.activeCard;
 		this.props
 			.playCard(this.props.myPlayer._id, card)
@@ -97,6 +105,10 @@ export default class PlayerHandScreen extends React.Component {
 				this.setState({ activeCard: null });
 			})
 			.catch(err => alert(err));
+	};
+
+	handleTogglePreMove = () => {
+		this.setState({ isPreMoveEnabled: !this.state.isPreMoveEnabled });
 	};
 
 	// TODO make these fan out/scrollable in a carousel
@@ -143,12 +155,27 @@ export default class PlayerHandScreen extends React.Component {
 	renderCta() {
 		if (this.props.currRoundState === 'bid') {
 			return this.renderBidInput();
-		} else if (this.isMyTurn()) {
-			return (
-				<button disabled={this.state.activeCard === null} className="btn" onClick={this.handleClickPlayCard}>
-					Play card
-				</button>
-			);
+		} else {
+			if (this.isMyTurn()) {
+				return (
+					<button disabled={this.state.activeCard === null} className="btn" onClick={this.playCard}>
+						Play card
+					</button>
+				);
+			} else if (this.state.activeCard) {
+				return (
+					<div className="pre-move">
+						<button className="btn" onClick={this.handleTogglePreMove}>
+							{this.state.isPreMoveEnabled ? 'Cancel pre-move' : 'Pre-move'}
+						</button>
+						<p>
+							{this.state.isPreMoveEnabled
+								? 'Pre-move enabled. Click above to cancel.'
+								: 'If you select pre-move, the selected card will automatically be played on your next turn.'}
+						</p>
+					</div>
+				);
+			}
 		}
 		return null;
 	}
