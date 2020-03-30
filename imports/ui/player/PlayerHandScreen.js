@@ -171,7 +171,7 @@ export default class PlayerHandScreen extends React.Component {
 						<p>
 							{this.state.isPreMoveEnabled
 								? 'Pre-move enabled. Click above to cancel.'
-								: 'If you select pre-move, the selected card will automatically be played on your next turn.'}
+								: 'If you select pre-move, this card will automatically be played on your next turn.'}
 						</p>
 					</div>
 				);
