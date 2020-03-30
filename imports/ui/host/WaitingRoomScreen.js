@@ -18,9 +18,17 @@ export default class WaitingRoomScreen extends React.Component {
 				<div className="players-list">
 					<h1>Players joined</h1>
 					<p>
-						{this.roomHasPlayers()
-							? this.props.players.map(player => this.renderPlayer(player))
-							: 'None yet. Join the game at wizard.dog using the code above!'}
+						{this.roomHasPlayers() ? (
+							this.props.players.map(player => this.renderPlayer(player))
+						) : (
+							<span>
+								None yet. Join the game at{' '}
+								<a href="https://www.wizards.dog" target="_blank">
+									wizards.dog
+								</a>{' '}
+								using the code above!
+							</span>
+						)}
 					</p>
 				</div>
 				<button className="btn" disabled={!this.roomHasPlayers()} onClick={this.props.startGame}>
