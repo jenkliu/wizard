@@ -171,7 +171,7 @@ export default class PlayerHandScreen extends React.Component {
 						<p>
 							{this.state.isPreMoveEnabled
 								? 'Pre-move enabled. Click above to cancel.'
-								: 'If you select pre-move, this card will automatically be played on your next turn.'}
+								: 'If you pre-move, this card will automatically be played on your next turn.'}
 						</p>
 					</div>
 				);
@@ -182,7 +182,7 @@ export default class PlayerHandScreen extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="player-hand-screen">
 				<div className="status">{this.renderStatus()}</div>
 				<div className="player-hand">{sortCards(this.props.cards).map(card => this.renderClickableCard(card))}</div>
 				{this.renderCta()}
