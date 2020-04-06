@@ -7,7 +7,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PlayerJoinScreen from './PlayerJoinScreen';
 import PlayerRoom from './PlayerRoom';
 
-const getPlayerById = playerId => {
+const getPlayerById = (playerId) => {
 	return PlayersCollection.findOne({ _id: playerId });
 };
 
@@ -15,7 +15,7 @@ export default class PlayerApp extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			myPlayerId: null
+			myPlayerId: null,
 		};
 	}
 
