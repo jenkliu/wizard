@@ -57,12 +57,12 @@ export default class PlayerJoinScreen extends React.Component {
 									here
 								</a>
 								.<h2>Host:</h2> On a laptop, go to{' '}
-								<a href="https://wizards.dog/host" target="_blank">
+								<a href="https://www.wizards.dog/host" target="_blank">
 									wizards.dog/host
 								</a>{' '}
 								and create a game. Share your screen with 2-5 friends (e.g. via Zoom or Chromecast).
 								<h2>All players (including host):</h2> On a mobile device, go to{' '}
-								<a href="https://wizards.dog" target="_blank">
+								<a href="https://www.wizards.dog" target="_blank">
 									wizards.dog
 								</a>{' '}
 								and join using the game code on the host's screen.
