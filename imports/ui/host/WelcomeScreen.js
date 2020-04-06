@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Links from '../Links';
 
 // TODO: add ability to join existing room as a host
 
@@ -17,11 +18,12 @@ export default class WelcomeScreen extends React.Component {
 						Create a game
 					</button>
 				</p>
+				<Links shouldShowJoinLink={true} />
 			</div>
 		);
 	}
 }
 
 WelcomeScreen.propTypes = {
-	createRoom: PropTypes.func
+	createRoom: PropTypes.func,
 };
