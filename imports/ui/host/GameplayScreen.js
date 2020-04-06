@@ -9,12 +9,12 @@ export default class GameplayScreen extends React.Component {
 
     // assume we initialize this component every new round
     const playerIdToTricks = {};
-    props.players.forEach(player => {
+    props.players.forEach((player) => {
       playerIdToTricks[player._id] = 0;
     });
 
     this.state = {
-      playerIdToTricks
+      playerIdToTricks,
     };
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -59,7 +59,7 @@ export default class GameplayScreen extends React.Component {
   renderPlayer(player) {
     const cardPlayed = this.props.currTrick && this.props.currTrick.playerIDsToCards[player._id];
     const cardClasses = classNames('player-card', {
-      'is-winner': this.props.currTrick && this.props.currTrick.winningPlayerID === player._id
+      'is-winner': this.props.currTrick && this.props.currTrick.winningPlayerID === player._id,
     });
 
     return (
@@ -94,12 +94,12 @@ export default class GameplayScreen extends React.Component {
           GAME CODE: <br />
           {this.props.gameCode}
         </div>
-        <h1 className="gameplay-title">{title}</h1>
+        <h1 className="heading">{title}</h1>
         <div className="trump-card">
           <Card value={this.props.trumpCard.value} suit={this.props.trumpCard.suit} type={this.props.trumpCard.type} />
           <p>Trump</p>
         </div>
-        <div className="player-cards-container">{this.props.players.map(player => this.renderPlayer(player))}</div>
+        <div className="player-cards-container">{this.props.players.map((player) => this.renderPlayer(player))}</div>
       </div>
     );
   }
@@ -114,5 +114,5 @@ GameplayScreen.propTypes = {
   currRoundState: PropTypes.string.isRequired, // 'bid' || 'play'
   activePlayerId: PropTypes.string,
   leadPlayerId: PropTypes.string,
-  gameCode: PropTypes.string.isRequired
+  gameCode: PropTypes.string.isRequired,
 };

@@ -13,13 +13,13 @@ export default class WaitingRoomScreen extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1> Game code</h1>
+				<h1 className="heading"> Game code</h1>
 				<div className="game-code">{this.props.code}</div>
 				<div className="players-list">
-					<h1>Players joined</h1>
+					<h1 className="heading">Players joined</h1>
 					<p>
 						{this.roomHasPlayers() ? (
-							this.props.players.map(player => this.renderPlayer(player))
+							this.props.players.map((player) => this.renderPlayer(player))
 						) : (
 							<span>
 								None yet. Join the game at{' '}
@@ -42,5 +42,5 @@ export default class WaitingRoomScreen extends React.Component {
 WaitingRoomScreen.propTypes = {
 	code: PropTypes.string,
 	players: PropTypes.array,
-	startGame: PropTypes.func
+	startGame: PropTypes.func,
 };

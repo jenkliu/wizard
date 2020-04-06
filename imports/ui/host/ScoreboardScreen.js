@@ -27,7 +27,7 @@ export default class ScoreboardScreen extends React.Component {
   render() {
     return (
       <div>
-        <h1>Scoreboard</h1>
+        <h1 className="heading">Scoreboard</h1>
         <div className="scoreboard">
           {this.sortPlayersByTotalScore(this.props.players).map((player, i) => this.renderPlayerScore(player, i + 1))}
         </div>
@@ -44,5 +44,5 @@ ScoreboardScreen.propTypes = {
   totalPlayerIdToScores: PropTypes.object.isRequired, // { player_id: bid}
   players: PropTypes.array.isRequired,
   startNextRound: PropTypes.func.isRequired,
-  isLastRound: PropTypes.bool // to do figure out how to get this
+  isLastRound: PropTypes.bool, // to do figure out how to get this
 };
