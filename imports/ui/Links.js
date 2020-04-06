@@ -48,25 +48,25 @@ export default class PlayerJoinScreen extends React.Component {
 							<h1 className="how-to-play-title">How to play </h1>
 
 							<div className="instructions">
-								Wizards is based on the card game{' '}
 								<a href="https://en.wikipedia.org/wiki/Wizard_(card_game)" target="_blank">
 									Wizard
-								</a>
-								. Like Hearts and Spades, it's a trick-taking card game. Learn the rules{' '}
+								</a>{' '}
+								is a trick-taking card game (like Hearts and Spades) for 3-6 players. Learn the rules{' '}
 								<a href="https://ourpastimes.com/play-wizard-card-game-2284959.html" target="_blank">
 									here
 								</a>
-								.<h2>Host:</h2> On a laptop, go to{' '}
+								. To play online:
+								<h2>1. Create a game</h2> (<i>Only one player does this.</i>) On a laptop, go to{' '}
 								<a href="https://www.wizards.dog/host" target="_blank">
 									wizards.dog/host
 								</a>{' '}
-								and create a game. Share your screen with 2-5 friends (e.g. via Zoom or Chromecast).
-								<h2>All players (including host):</h2> On a mobile device, go to{' '}
+								and create a game. Share your screen with 2-5 friends (e.g. via Zoom).
+								<h2>2. Join the game</h2> (<i>All players, including host, do this.</i>) On a mobile device, go to{' '}
 								<a href="https://www.wizards.dog" target="_blank">
 									wizards.dog
 								</a>{' '}
 								and join using the game code on the host's screen.
-								<h2>HAVE FUN!</h2>
+								<h2>3. HAVE FUN!</h2>
 							</div>
 							<p>
 								<button className="btn" onClick={this.handleCloseHowToPlayModal}>
