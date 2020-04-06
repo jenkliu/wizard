@@ -37,8 +37,7 @@ export default class PlayerJoinScreen extends React.Component {
 							{' '}
 							| <a href="/">Join a game</a>
 						</span>
-					) : null}{' '}
-					| <a href="mailto:hello@wizards.dog">Send feedback</a>
+					) : null}
 				</p>
 				<Modal show={this.state.isShowingModal} onHide={this.handleCloseHowToPlayModal}>
 					<Modal.Body>
